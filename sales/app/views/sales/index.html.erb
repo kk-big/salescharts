@@ -433,7 +433,7 @@ $(function () {
       <th>残ｸﾚ率</th>
       <th>可</th>
       <th>予定</th>
-      <th data-container="body" data-toggle="popover" data-placement="top" title="新車登録NG率" data-content="予定／当月可">NG率</th>
+      <th data-container="body" data-toggle="popover" data-placement="top" title="新車登録NG率" data-content="（当月可－予定）／当月可">NG率</th>
 
     <%# 中古車 %>
 
@@ -525,7 +525,7 @@ $(function () {
           <td><%= number_with_precision(registration_plan_all, precision:0) %></td>
           <% total_registration_plan += nil_to_zero(registration_plan_all) %>
           <%# 登録可 NG率　%>
-          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_possible, registration_plan_all), precision:1) %></td>
+          <td class="auto-calc"><%= number_to_percentage(ng_per(registration_possible_all, registration_plan_all), precision:1) %></td>
           <%# 登録済 %>
           <td><%= number_with_precision(sale.registration_result, precision:0) %></td>
           <% total_registration_result += nil_to_zero(sale.registration_result) %>
@@ -754,7 +754,7 @@ $(function () {
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_newcar_credit, total_newcar_credit_re), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_possible) %>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_plan) %></td>
-      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_registration_possible, total_registration_plan), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(ng_per(total_registration_possible, total_registration_plan), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_result) %>
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_registration_plan, total_registration_result), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_balance) %>

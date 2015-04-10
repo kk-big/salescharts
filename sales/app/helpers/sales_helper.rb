@@ -9,7 +9,7 @@ module SalesHelper
     end
   end
 
-# 計画進度（計画/実績）を返す
+# 計画進度（param2/param1）を返す
   def progress_per(param1, param2)
     if param1.nil? or param2.nil? then
       return 0 
@@ -18,6 +18,22 @@ module SalesHelper
         return 0 
       else
          return param2.quo( param1) * 100
+      end
+    end   
+  end
+
+# NG率を返す（(param1-param2)/param1）
+  def ng_per(param1, param2)
+    if param1.nil? or param2.nil? then
+      return 0 
+    else
+      if param1 == 0 then
+        return 0 
+      elsif param1 <= param2 
+        return 0 
+      else
+        ng = param1 - param2         
+        return ng.quo(param1) * 100
       end
     end   
   end
