@@ -1,0 +1,85 @@
+<p id="notice"><%= notice %></p>
+
+<%= javascript_tag do %>
+var data = {'data-date-format': 'YYYYMM' };
+$(function(){
+  $('.datepicker').attr(data);
+  $('.datepicker').datetimepicker();
+});
+<% end %>
+
+<h4>車点検・保険一覧</h4>
+
+<table id="list_head">
+<tr><td>
+<!-- 検索フォーム -->
+<div id="search_form_box">
+<%= form_tag(inspections_path, method: :get, id: :search_form) do %>
+  <div class="field calender">
+    <%= label_tag(:inspection_ym, "基準年月", { :class => "search-label" } ) %>
+    <%= text_field_tag(:inspection_ym_from, @inspection_ym_from ,{ :class => "input-mini datepicker" } ) %>
+    ～
+    <%= text_field_tag(:inspection_ym_to, @inspection_ym_to ,{ :class => "input-mini datepicker" } ) %>
+    <%= label_tag(:user_id, "　社員", { :class => "search-label" } ) %>
+    <%= collection_select(:inspection, :user_id, User.where(job: '1', delete_flag: '0').order('display_order asc','user_id asc'), :user_id, :user_name, {include_blank: true, :selected => @user_id}  ,{ :class => "input-large" }) %>
+    <%= button_tag(type: 'submit', class: "btn btn-default") do %>
+    <span class="glyphicon glyphicon-search"></span> 
+    <% end %>
+    <button class="btn btn-default" type="button" onclick="clearSearchForm()"><i class="glyphicon glyphicon-remove"></i></button>　
+  </div>
+<% end %>
+</div>
+</td>
+
+<td id="btn-new">
+<%= link_to sanitize('<i class="glyphicon glyphicon-pencil"></i> ') + '新規登録', new_inspection_path, class: "btn btn-danger" %>
+</td>
+</tr>
+</table>
+
+<div class="x_data_area_inspection">
+<div class="x_scroll_box_inspection">
+<table class="table table-condensed table-bordered table-hover table-striped inspection-table">
+  <thead>
+    <tr>
+      <th rowspan="2">社員</th>
+      <th rowspan="2">基準年月</th>
+      <th rowspan="2">初回1ヶ月点検</th>
+      <th rowspan="2">初回6ヶ月点検</th>
+      <th colspan="2">12点検・24点検</th>
+      <th colspan="2">車検</th>
+      <th colspan="3">任意保険</th>
+      <th rowspan="2" colspan="2"></th>
+    </tr>
+    <tr>
+      <th>実施</th>
+      <th>対象外実施</th>
+      <th>実施</th>
+      <th>対象外実施</th>
+      <th>新規</th>
+      <th>継続</th>
+      <th>解約</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @inspections.each do |inspection| %>
+      <tr>
+        <td id="align-left"><%= inspection.user.user_name %></td>
+        <td id="align-center"><%= yyyymm_slash(inspection.inspection_ym) %></td>
+        <td><%= inspection.onemonth %></td>
+        <td><%= inspection.sixmonth %></td>
+        <td><%= inspection.years %></td>
+        <td><%= inspection.years_not %></td>
+        <td><%= inspection.inspection %></td>
+        <td><%= inspection.inspection_not %></td>
+        <td><%= inspection.insurance_new %></td>
+        <td><%= inspection.insurance_renew %></td>
+        <td><%= inspection.insurance_cancel %></td>
+        <td id="align-center"><%= link_to '変更', edit_inspection_path(inspection) %></td>
+        <td id="align-center"><%= link_to '削除', inspection, method: :delete, data: { confirm: '車点検・保険を削除しますか？' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+</div>

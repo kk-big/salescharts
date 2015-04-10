@@ -35,12 +35,12 @@ class SalesController < ApplicationController
     end
 
     strsql = 'select
-        usplre.uid as user_id, usplre.user_name, usplre.display_order, sum(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_plan) as registration_plan, 
+        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.display_order, sum(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_plan) as registration_plan, 
         sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
         sum(pl_newcar) as pl_newcar, sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce,
         sum(wholesale) as wholesale,
         sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re,
-        sum(registration_possible) as registration_possible, sum(registration_result) as registration_result, sum(pl_usedcar) as pl_usedcar, sum(usedcar) as usedcar, sum(pl_onemonth) as pl_onemonth, sum(onemonth) as onemonth, sum(pl_sixmonth) as pl_sixmonth, sum(sixmonth) as sixmonth, sum(pl_years) as pl_years, sum(years) as years,
+        sum(registration_possible) as registration_possible, sum(registration_plan_update) as registration_plan_update, sum(registration_result) as registration_result, sum(pl_usedcar) as pl_usedcar, sum(usedcar) as usedcar, sum(pl_onemonth) as pl_onemonth, sum(onemonth) as onemonth, sum(pl_sixmonth) as pl_sixmonth, sum(sixmonth) as sixmonth, sum(pl_years) as pl_years, sum(years) as years,
         sum(years_not) as years_not, sum(pl_inspection) as pl_inspection, sum(inspection) as inspection, sum(inspection_not) as inspection_not, sum(insurance_new) as insurance_new, sum(pl_insurance) as pl_insurance, sum(insurance_renew) as insurance_renew,
         sum(insurance_cancel) as insurance_cancel, sum(number_of_newcar) as number_of_newcar, sum(sales_of_newcar) as sales_of_newcar, sum(profit_of_newcar) as profit_of_newcar,
         sum(number_of_usedcar) as number_of_usedcar, sum(sales_of_usedcar) as sales_of_usedcar, sum(profit_of_usedcar) as profit_of_usedcar,
@@ -59,7 +59,7 @@ class SalesController < ApplicationController
         (case when sum(all_sales) <> 0 then COALESCE(sum(all_profit),0) / sum(all_sales) end) as per_all_profit
        from 
       (
-      ((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.role, us.delete_flag, us.display_order,
+      (((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.role, us.delete_flag, us.display_order,
        pl.user_id, pl.plan_ym as plan_ym, pl.customer as pl_customer, pl.newcar as pl_newcar, pl.newcar_balance as pl_newcar_balance, pl.registration_plan as pl_registration_plan, pl.usedcar as pl_usedcar, pl.onemonth as pl_onemonth, pl.sixmonth as pl_sixmonth, pl.years as pl_years, 
        pl.inspection as pl_inspection, pl.insurance as pl_insurance
        from users us left join plans pl on us.user_id = pl.user_id) as uspl
@@ -69,11 +69,8 @@ class SalesController < ApplicationController
        sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce, 
        sum(wholesale) as wholesale,
        sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re, 
-       sum(registration_possible) as registration_possible, sum(registration_result) as registration_result,
-       sum(usedcar) as usedcar,
-       sum(onemonth) as onemonth, sum(sixmonth) as sixmonth, sum(years) as years, sum(years_not) as years_not,
-       sum(inspection) as inspection, sum(inspection_not) as inspection_not,
-       sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
+       sum(registration_possible) as registration_possible, sum(registration_plan_update) as registration_plan_update, sum(registration_result) as registration_result,
+       sum(usedcar) as usedcar
        from results group by user_id , result_ym) re
        on uspl.uid = re.user_id and uspl.plan_ym = re.result_ym) as usplre
        full outer join 
@@ -83,47 +80,58 @@ class SalesController < ApplicationController
        (sum(sales_of_newcar) + sum(sales_of_usedcar) + sum(sales_of_service)) as all_sales,
        (sum(profit_of_newcar) + sum(profit_of_usedcar) + sum(profit_of_service)) as all_profit
        from profits group by user_id , profit_ym) as pr
-       on usplre.uid = pr.user_id and usplre.plan_ym = pr.profit_ym
-       ) where usplre.plan_ym >= ? and usplre.plan_ym <= ? group by usplre.uid, usplre.user_name, usplre.display_order ' 
+       on usplre.uid = pr.user_id and usplre.plan_ym = pr.profit_ym) as usplrepr
+       full outer join 
+      (select user_id, inspection_ym, 
+       sum(onemonth) as onemonth, sum(sixmonth) as sixmonth, sum(years) as years, sum(years_not) as years_not,
+       sum(inspection) as inspection, sum(inspection_not) as inspection_not,
+       sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
+       from inspections group by user_id , inspection_ym) ins
+       on usplrepr.uid = ins.user_id and usplrepr.plan_ym = ins.inspection_ym
+       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.display_order ' 
     if params[:sortkey] == 'all_sales desc' 
-      strsql = strsql + 'order by all_sales desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by all_sales desc, usplrepr.display_order, usplrepr.uid'
     elsif params[:sortkey] == 'all_profit desc'
-      strsql = strsql + 'order by all_profit desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by all_profit desc, usplrepr.display_order, usplrepr.uid'
     # 新車 受注進度
     elsif params[:sortkey] == 'progress_newcar desc'
-      strsql = strsql + 'order by progress_newcar desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_newcar desc, usplrepr.display_order, usplrepr.uid'
     # 新車 登録進度
     elsif params[:sortkey] == 'progress_registration desc'
-      strsql = strsql + 'order by progress_registration desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_registration desc, usplrepr.display_order, usplrepr.uid'
     # 中古車 受注進度
     elsif params[:sortkey] == 'progress_usedcar desc'
-      strsql = strsql + 'order by progress_usedcar desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_usedcar desc, usplrepr.display_order, usplrepr.uid'
     # 12点検・24点検 実施率
     elsif params[:sortkey] == 'progress_years desc'
-      strsql = strsql + 'order by progress_years desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_years desc, usplrepr.display_order, usplrepr.uid'
     # 車検 実施率
     elsif params[:sortkey] == 'progress_inspection desc'
-      strsql = strsql + 'order by progress_inspection desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_inspection desc, usplrepr.display_order, usplrepr.uid'
     # 任意保険 実施率
     elsif params[:sortkey] == 'progress_insurance_renew desc'
-      strsql = strsql + 'order by progress_insurance_renew desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by progress_insurance_renew desc, usplrepr.display_order, usplrepr.uid'
     # 新車 利益率
     elsif params[:sortkey] == 'per_profit_of_newcar desc'
-      strsql = strsql + 'order by per_profit_of_newcar desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by per_profit_of_newcar desc, usplrepr.display_order, usplrepr.uid'
     # 中古車 利益率
     elsif params[:sortkey] == 'per_profit_of_usedcar desc'
-      strsql = strsql + 'order by per_profit_of_usedcar desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by per_profit_of_usedcar desc, usplrepr.display_order, usplrepr.uid'
     # サービス 利益率
     elsif params[:sortkey] == 'per_profit_of_service desc'
-      strsql = strsql + 'order by per_profit_of_service desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by per_profit_of_service desc, usplrepr.display_order, usplrepr.uid'
     # 総粗利 利益率
     elsif params[:sortkey] == 'per_all_profit desc'
-      strsql = strsql + 'order by per_all_profit desc, usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by per_all_profit desc, usplrepr.display_order, usplrepr.uid'
     else
-      strsql = strsql + 'order by usplre.display_order, usplre.uid'
+      strsql = strsql + 'order by usplrepr.display_order, usplrepr.uid'
     end
     @sales = Plan.find_by_sql([strsql, param_ym_from, param_ym_to])
-  end
+
+    # 粗利の最終更新日
+    @profit_update_date = Profit.where('profit_ym >= ? and profit_ym <= ?' ,param_ym_from, param_ym_to).maximum(:updated_at) 
+
+   end
 
   # GET /sales/1
   # GET /sales/1.json

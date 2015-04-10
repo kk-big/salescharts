@@ -80,7 +80,7 @@ class ResultsController < ApplicationController
 
     respond_to do |format|
       if @result.save
-        format.html { redirect_to @result, notice: '実績を登録しました。' }
+        format.html { redirect_to @result, notice: '販売活動を登録しました。' }
         format.json { render :show, status: :created, location: @result }
       else
         format.html { render :new }
@@ -97,7 +97,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
 #      if @result.update(result_params)
       if @result.update(update_result_params)
-        format.html { redirect_to @result, notice: '実績を更新しました。' }
+        format.html { redirect_to @result, notice: '販売活動を変更しました。' }
         format.json { render :show, status: :ok, location: @result }
       else
         format.html { render :edit }
@@ -111,7 +111,7 @@ class ResultsController < ApplicationController
   def destroy
     @result.destroy
     respond_to do |format|
-      format.html { redirect_to results_url, notice: '実績を削除しました。' }
+      format.html { redirect_to results_url, notice: '販売活動を削除しました。' }
       format.json { head :no_content }
     end
   end
@@ -124,6 +124,6 @@ class ResultsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def result_params
-      params.require(:result).permit(:user_id, :result_ym, :result_date, :negotiations, :assessment, :testdrive, :newcar_new, :newcar_replace, :newcar_add, :newcar_introduce, :wholesale, :newcar_cash, :newcar_credit, :newcar_credit_re, :registration_possible, :registration_result, :usedcar, :onemonth, :sixmonth, :years, :years_not, :inspection, :inspection_not, :insurance_new, :insurance_renew, :insurance_cancel)
+      params.require(:result).permit(:user_id, :result_ym, :result_date, :negotiations, :assessment, :testdrive, :newcar_new, :newcar_replace, :newcar_add, :newcar_introduce, :wholesale, :newcar_cash, :newcar_credit, :newcar_credit_re, :registration_possible, :registration_plan_update, :registration_result, :usedcar, :onemonth, :sixmonth, :years, :years_not, :inspection, :inspection_not, :insurance_new, :insurance_renew, :insurance_cancel)
     end
 end

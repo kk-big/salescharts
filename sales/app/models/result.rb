@@ -86,7 +86,7 @@ class Result < ActiveRecord::Base
    # 新車台数
    validate :check_newcar_cash
    def check_newcar_cash
-     if (nil_to_zero(newcar_new) + nil_to_zero(newcar_replace) + nil_to_zero(newcar_add) + nil_to_zero(newcar_introduce)) !=
+     if (nil_to_zero(newcar_new) + nil_to_zero(newcar_replace) + nil_to_zero(newcar_add) + nil_to_zero(newcar_introduce) + nil_to_zero(wholesale)) !=
         (nil_to_zero(newcar_cash) + nil_to_zero(newcar_credit))
        errors.add(:newcar_cash,"：支払方法の合計は受注の合計と一致させて下さい。")
        errors.add(:newcar_credit,"：支払方法の合計は受注の合計と一致させて下さい。")

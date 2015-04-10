@@ -73,12 +73,16 @@ class TrendsController < ApplicationController
        sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
        sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce, 
        sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re, sum(registration_possible) as registration_possible, sum(registration_result) as registration_result,
-       sum(usedcar) as usedcar,
+       sum(usedcar) as usedcar
+       from results group by user_id , result_ym) re
+       on uspl.uid = re.user_id and uspl.plan_ym = re.result_ym) as usplre
+       full outer join 
+      (select user_id, inspection_ym, 
        sum(onemonth) as onemonth, sum(sixmonth) as sixmonth, sum(years) as years, sum(years_not) as years_not,
        sum(inspection) as inspection, sum(inspection_not) as inspection_not,
        sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
-       from results group by user_id , result_ym) re
-       on uspl.uid = re.user_id and uspl.plan_ym = re.result_ym) as usplre
+       from inspections group by user_id , inspection_ym) ins
+       on usplre.uid = ins.user_id and usplre.plan_ym = ins.inspection_ym
        where usplre.plan_ym >=? and usplre.plan_ym <= ?
        group by usplre.uid, usplre.user_name, usplre.plan_ym, usplre.customer, usplre.registration_plan, usplre.display_order order by usplre.display_order, usplre.uid, usplre.plan_ym
       ',param_ym_from, param_ym_to ])

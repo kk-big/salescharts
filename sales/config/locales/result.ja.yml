@@ -19,6 +19,7 @@ ja:
         newcar_credit: '新車受注（クレジット）'
         newcar_credit_re: '新車受注（残クレ）'
         registration_possible: '新車登録当月可'
+        registration_plan_update: '新車登録当月予定'
         registration_result: '新車登録当月実績'
         usedcar: '中古車直販受注'
         onemonth: '初回1ヶ月点検実施'

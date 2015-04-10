@@ -35,9 +35,10 @@
           <li class="dropdown <%= add_active("plans,results,profits") %>">
             <a class="dropdown-toggle"　 data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-pencil"></i>計画／実績登録 <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li class="<%= add_active("plans") %>"><%= link_to "計画登録", plans_path %></li>
-              <li class="<%= add_active("results") %>"><%= link_to "実績登録", results_path %></li>
-              <li class="<%= add_active("profits") %>"><%= link_to "粗利登録", profits_path %></li>
+              <li class="<%= add_active("plans") %>"><%= link_to "計画", plans_path %></li>
+              <li class="<%= add_active("results") %>"><%= link_to "販売活動", results_path %></li>
+              <li class="<%= add_active("inspections") %>"><%= link_to "車点検・保険", inspections_path %></li>
+              <li class="<%= add_active("profits") %>"><%= link_to "粗利", profits_path %></li>
            </ul>
           </li>
           <li class="<%= add_active("users") %>"><%= link_to users_path do %><i class="glyphicon glyphicon-cog"></i>システム管理<% end %></li>

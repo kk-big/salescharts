@@ -8,7 +8,7 @@ $(function(){
 });
 <% end %>
 
-<h4>実績一覧</h4>
+<h4>販売実績一覧</h4>
 
 <table id="list_head">
 <tr><td>
@@ -42,46 +42,32 @@ $(function(){
 <table class="table table-condensed table-bordered table-hover table-striped result-table">
   <thead>
     <tr>
-      <th class="user_name" rowspan="4">社員</th>
-      <th class="result_date" rowspan="4">基準日</th>
-      <th class="one_char" rowspan="4">商</br>談</th>
-      <th class="one_char" rowspan="4">査</br>定</th>
-      <th class="one_char" rowspan="4">試</br>乗</th>
-      <th colspan="10">新車</th>
-      <th class="two_char" rowspan="4">中</br>古</br>車</th>
-      <th class="three_char" rowspan="4">初回</br>1ヶ月</br>点検</th>
-      <th class="three_char" rowspan="4">初回</br>6ヶ月</br>点検</th>
-      <th class="years_char" colspan="2">12,24点検</th>
-      <th colspan="2">車検</th>
-      <th colspan="3">任意保険</th>
-      <th colspan="2" rowspan="4"></th>
+      <th class="user_name" rowspan="3">社員</th>
+      <th class="result_date" rowspan="3">基準日</th>
+      <th class="width56" rowspan="3">商談</th>
+      <th class="width56" rowspan="3">査定</th>
+      <th class="width56" rowspan="3">試乗</th>
+      <th colspan="8">新車受注</th>
+      <th colspan="3">新車登録</th>
+      <th class="width56" rowspan="3">中古車</th>
+      <th colspan="2" rowspan="3"></th>
     </tr>
     <tr>
-      <th colspan="8">受注</th>
-      <th colspan="2">登録</th>
-      <th class="one_char" rowspan="3">実</br>施</th>
-      <th class="two_char" rowspan="3">対象</br>外</br>実施</th>
-      <th class="one_char" rowspan="3">実</br>施</th>
-      <th class="two_char" rowspan="3">対象</br>外</br>実施</th>
-      <th class="one_char" rowspan="3">新</br>規</th>
-      <th class="one_char" rowspan="3">継</br>続</th>
-      <th class="one_char" rowspan="3">解</br>約</th>
-    </tr>
-    <tr>
-      <th colspan="4">既納客</th>
-      <th rowspan="2" class="one_char">業</br>販</th>
+      <th class="width56" rowspan="2">新規</th>
+      <th colspan="3">既納客</th>
+      <th rowspan="2" class="width56">業販</th>
       <th colspan="3">支払方法</th>
-      <th rowspan="2" class="two_char">当月</br>可</th>
-      <th rowspan="2" class="two_char">実績</th>
+      <th rowspan="2" class="width56">当月</br>可</th>
+      <th rowspan="2" class="width56">当月</br>予定</th>
+      <th rowspan="2" class="width56">当月</br>実績</th>
     </tr>
     <tr>
-      <th class="two_char">新規</th>
-      <th class="two_char">代替</th>
-      <th class="two_char">増車</th>
-      <th class="two_char">紹介</th>
-      <th class="two_char">現金</th>
-      <th class="credit_char">ｸﾚｼﾞｯﾄ</th>
-      <th class="credit_re_char">残ｸﾚ</th>
+      <th class="width56">代替</th>
+      <th class="width56">増車</th>
+      <th class="width56">紹介</th>
+      <th class="width56">現金</th>
+      <th class="width56">ｸﾚｼﾞｯﾄ</th>
+      <th class="width56">残ｸﾚ</th>
     </tr>
   </thead>
 </table>
@@ -96,29 +82,21 @@ $(function(){
       <tr>
         <td class="user_name" id="align-left"><%= result.user.user_name %></td>
         <td class="result_date" id="align-center"><%= yyyymmdd_slash(result.result_date) %></td>
-        <td class="one_char"><%= result.negotiations %></td>
-        <td class="one_char"><%= result.assessment %></td>
-        <td class="one_char"><%= result.testdrive %></td>
-        <td class="two_char"><%= result.newcar_new %></td>
-        <td class="two_char"><%= result.newcar_replace %></td>
-        <td class="two_char"><%= result.newcar_add %></td>
-        <td class="two_char"><%= result.newcar_introduce %></td>
-        <td class="one_char"><%= result.wholesale %></td>
-        <td class="two_char"><%= result.newcar_cash %></td>
-        <td class="credit_char"><%= result.newcar_credit %></td>
-        <td class="credit_re_char"><%= result.newcar_credit_re %></td>
-        <td class="two_char"><%= result.registration_possible %></td>
-        <td class="two_char"><%= result.registration_result %></td>
-        <td class="two_char"><%= result.usedcar %></td>
-        <td class="three_char"><%= result.onemonth %></td>
-        <td class="three_char"><%= result.sixmonth %></td>
-        <td class="one_char"><%= result.years %></td>
-        <td class="two_char"><%= result.years_not %></td>
-        <td class="one_char"><%= result.inspection %></td>
-        <td class="two_char"><%= result.inspection_not %></td>
-        <td class="one_char"><%= result.insurance_new %></td>
-        <td class="one_char"><%= result.insurance_renew %></td>
-        <td class="one_char"><%= result.insurance_cancel %></td>
+        <td class="width56"><%= result.negotiations %></td>
+        <td class="width56"><%= result.assessment %></td>
+        <td class="width56"><%= result.testdrive %></td>
+        <td class="width56"><%= result.newcar_new %></td>
+        <td class="width56"><%= result.newcar_replace %></td>
+        <td class="width56"><%= result.newcar_add %></td>
+        <td class="width56"><%= result.newcar_introduce %></td>
+        <td class="width56"><%= result.wholesale %></td>
+        <td class="width56"><%= result.newcar_cash %></td>
+        <td class="width56"><%= result.newcar_credit %></td>
+        <td class="width56"><%= result.newcar_credit_re %></td>
+        <td class="width56"><%= result.registration_possible %></td>
+        <td class="width56"><%= result.registration_plan_update %></td>
+        <td class="width56"><%= result.registration_result %></td>
+        <td class="width56"><%= result.usedcar %></td>
         <td id="align-center"><%= link_to '変更', edit_result_path(result) %></td>
         <td id="align-center"><%= link_to '削除', result, method: :delete, data: { confirm: '実績を削除しますか？' } %></td>
       </tr>

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :charts
   resources :plans
   resources :results
+  resources :inspections
   resources :profits
   root :to => "logins#new"
   resources :logins, only: [:new, :destroy] do

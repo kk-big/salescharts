@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150405061659) do
+ActiveRecord::Schema.define(version: 20150407053118) do
 
   create_table "access_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -22,6 +22,25 @@ ActiveRecord::Schema.define(version: 20150405061659) do
     t.string   "action"
     t.text     "parameters"
   end
+
+  create_table "inspections", force: :cascade do |t|
+    t.string   "user_id"
+    t.string   "inspection_ym"
+    t.integer  "onemonth"
+    t.integer  "sixmonth"
+    t.integer  "years"
+    t.integer  "years_not"
+    t.integer  "inspection"
+    t.integer  "inspection_not"
+    t.integer  "insurance_new"
+    t.integer  "insurance_renew"
+    t.integer  "insurance_cancel"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "inspections", ["inspection_ym"], name: "index_inspections_on_inspection_ym", using: :btree
+  add_index "inspections", ["user_id"], name: "index_inspections_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
     t.string   "user_id"
@@ -88,9 +107,10 @@ ActiveRecord::Schema.define(version: 20150405061659) do
     t.integer  "insurance_new"
     t.integer  "insurance_renew"
     t.integer  "insurance_cancel"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.integer  "wholesale"
+    t.integer  "registration_plan_update"
   end
 
   add_index "results", ["result_date"], name: "index_results_on_result_date", using: :btree

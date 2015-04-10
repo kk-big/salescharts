@@ -260,7 +260,7 @@ div.x_scroll_box_result_head {
   margin-top:-5px;
   float: left;
   width: 1170px;
-  height: 129px;
+  height: 98px;
 }
 
 div.x_data_area_result {
@@ -298,21 +298,8 @@ div.x_scroll_box_result {
   font-size:12px;
   width:55px;
 }
-.credit_re_char{
-  width:44px;
-}
-.one_char{
-  width:27px;
-}
-.two_char{
-  width:41px;
-}
-.three_char{
+.width56{
   width:56px;
-}
-.years_char{
-  font-size:12px;
-  width:54px;
 }
 
 /* 実績登録　入力フォームテーブルサイズ */
@@ -321,7 +308,7 @@ div.x_scroll_box_result {
 }
 .result_form_box_right {
   width:370px;
-  margin-top:11px;
+  margin-top:37px;
   margin-left:40px;
 }
 
@@ -329,6 +316,23 @@ div.x_scroll_box_result {
 #result_submit {
   margin-top: 20px;
   margin-left: 188px;
+}
+
+/* 車点検・保険一覧　 */
+.inspection-table tr> td{
+  text-align: right;
+}
+/* 車点検・保険登録　入力フォームテーブルサイズ */
+.inspection_form_box {
+  width:360px;
+}
+/* 車点検・保険登録　ボタン位置 */
+#inspection_submit {
+  margin-top: 20px;
+  margin-left: 177px;
+}
+.inspection-table>thead>tr>th {
+  border: 1px solid #ddd;
 }
 
 /* 粗利一覧　 */

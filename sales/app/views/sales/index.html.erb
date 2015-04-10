@@ -20,7 +20,6 @@ $(function () {
 
 <h4>営業活動実績</h4>
 
-
 <table id="chart-select">
   <tr>
 <td>
@@ -306,11 +305,11 @@ $(function () {
       <th colspan="6" data-container="body" data-toggle="popover" data-placement="top" title="任意保険" data-content="新規1件/人　継続100%">任意保険</th>
 
     <%# 粗利 %>
-      <th colspan="4">新車</th>
-      <th colspan="4">中古車</th>
-      <th colspan="4">サービス</th>
-      <th colspan="3">総売上・粗利</th>
-
+      <th colspan="15">粗利
+        <% unless @profit_update_date.blank? then %>
+          <%= '（' + @profit_update_date.year.to_s + "." + @profit_update_date.month.to_s  + "." + @profit_update_date.day.to_s + '現在）'%>
+        <% end %>
+      </th>
     </tr>
     <tr>
     <%# 新車 %>
@@ -356,33 +355,10 @@ $(function () {
       <th rowspan="3">解約</th>
 
     <%# 粗利 %>
-      <th rowspan="3">売上</br>台数</th>
-      <th rowspan="3">売上</br>金額</th>
-      <th rowspan="3">粗利</th>
-      <th rowspan="3">利益率</br>
-        <%= link_to sales_path(sortkey: 'per_profit_of_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
-      <th rowspan="3">売上</br>台数</th>
-      <th rowspan="3">売上</br>金額</th>
-      <th rowspan="3">粗利</th>
-      <th rowspan="3">利益率</br>
-        <%= link_to sales_path(sortkey: 'per_profit_of_usedcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
-      <th rowspan="3">入庫</br>台数</th>
-      <th rowspan="3">入庫</br>金額</th>
-      <th rowspan="3">粗利</th>
-      <th rowspan="3">利益率</br>
-        <%= link_to sales_path(sortkey: 'per_profit_of_service desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
-      <th rowspan="3">売上金額</br>(千円)
-        <%= link_to sales_path(sortkey: 'all_sales desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
-      <th rowspan="3">粗利金額</br>(千円)
-        <%= link_to sales_path(sortkey: 'all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
-      <th rowspan="3">利益率</br>
-        <%= link_to sales_path(sortkey: 'per_all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
-      </th>
+      <th colspan="4">新車</th>
+      <th colspan="4">中古車</th>
+      <th colspan="4">サービス</th>
+      <th colspan="3">合計</th>
 
     </tr>
     <tr>
@@ -395,7 +371,7 @@ $(function () {
         <%= link_to sales_path(sortkey: 'progress_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
       <th colspan="4">クレジット</th>
-      <th colspan="3">当月可</th>
+      <th colspan="3">当月</th>
       <th rowspan="2">登録済</th>
       <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／予定　100%必達">登録</br>進度
         <%= link_to sales_path(sortkey: 'progress_registration desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
@@ -417,6 +393,33 @@ $(function () {
       </th>
 
     <%# 粗利 %>
+      <th rowspan="2">売上</br>台数</th>
+      <th rowspan="2">売上</br>金額</th>
+      <th rowspan="2">粗利</th>
+      <th rowspan="2">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2">売上</br>台数</th>
+      <th rowspan="2">売上</br>金額</th>
+      <th rowspan="2">粗利</th>
+      <th rowspan="2">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_usedcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2">入庫</br>台数</th>
+      <th rowspan="2">入庫</br>金額</th>
+      <th rowspan="2">粗利</th>
+      <th rowspan="2">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_service desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2">売上金額</br>(千円)
+        <%= link_to sales_path(sortkey: 'all_sales desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2">粗利金額</br>(千円)
+        <%= link_to sales_path(sortkey: 'all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
 
     </tr>
     <tr>
@@ -428,7 +431,7 @@ $(function () {
       <th>ｸﾚｼﾞｯﾄ率</th>
       <th>残ｸﾚ</th>
       <th>残ｸﾚ率</th>
-      <th>当月可</th>
+      <th>可</th>
       <th>予定</th>
       <th data-container="body" data-toggle="popover" data-placement="top" title="新車登録NG率" data-content="予定／当月可">NG率</th>
 
@@ -487,11 +490,11 @@ $(function () {
           <%# 受注紹介 %>
           <td><%= number_with_precision(sale.newcar_introduce, precision:0) %></td>
               <% total_newcar_introduce += nil_to_zero(sale.newcar_introduce) %>
-              <% all_newcar = nil_to_zero(sale.newcar_new) + nil_to_zero(sale.newcar_replace) + nil_to_zero(sale.newcar_add) + nil_to_zero(sale.newcar_introduce) %>
-              <% total_newcar += all_newcar %>
-              <% chart_newcar.push(number_with_precision(all_newcar, precision:0)) %>
           <%# 業販 %>
           <td><%= number_with_precision(sale.wholesale, precision:0) %></td>
+              <% all_newcar = nil_to_zero(sale.newcar_new) + nil_to_zero(sale.newcar_replace) + nil_to_zero(sale.newcar_add) + nil_to_zero(sale.newcar_introduce) + nil_to_zero(sale.wholesale) %>
+              <% chart_newcar.push(number_with_precision(all_newcar, precision:0)) %>
+              <% total_newcar += all_newcar %>
           <% total_wholesale += nil_to_zero(sale.wholesale) %>
           <%# 受注合計 %>
           <td class="auto-calc"><%= number_with_precision(all_newcar, precision:0) %></td>
@@ -517,17 +520,18 @@ $(function () {
 	      <td><%= number_with_precision(sale.registration_possible, precision:0) %></td>
               <% total_registration_possible += nil_to_zero(sale.registration_possible) %>
           <%# 登録可 予定　%>
-          <td><%= number_with_precision(sale.registration_plan, precision:0) %></td>
-          <% total_registration_plan += nil_to_zero(sale.registration_plan) %>
+          <% registration_plan_all = nil_to_zero(sale.registration_plan) + nil_to_zero(sale.registration_plan_update) %>
+          <td><%= number_with_precision(registration_plan_all, precision:0) %></td>
+          <% total_registration_plan += nil_to_zero(registration_plan_all) %>
           <%# 登録可 NG率　%>
-          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_possible, sale.registration_plan), precision:1) %></td>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_possible, registration_plan_all), precision:1) %></td>
           <%# 登録済 %>
           <td><%= number_with_precision(sale.registration_result, precision:0) %></td>
           <% total_registration_result += nil_to_zero(sale.registration_result) %>
           <% chart_registration_result.push(number_with_precision(nil_to_zero(sale.registration_result), precision:0)) %>
           <%# 登録進度％ %>
-          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_plan, sale.registration_result), precision:1) %></td>
-          <% chart_percentage_registration.push(number_with_precision(progress_per(sale.registration_plan, sale.registration_result), precision:1)) %>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(registration_plan_all, sale.registration_result), precision:1) %></td>
+          <% chart_percentage_registration.push(number_with_precision(progress_per(registration_plan_all, sale.registration_result), precision:1)) %>
           <%# 注残 %>
           <% newcar_balance = nil_to_zero(sale.newcar_balance) + all_newcar %>
           <td class="auto-calc"><%= number_with_precision(newcar_balance, precision:0) %></td>

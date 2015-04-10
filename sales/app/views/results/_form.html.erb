@@ -96,11 +96,6 @@ $(function(){
 	               <%= f.text_field :newcar_introduce, class: "input-large align-right" %>　台
 	           </td>
 	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
 <!--新車業販 -->
 	      <tr class="control-group">
 	           <td class="form_label"><%= f.label :新車業販, class: "control-label" %></td>
@@ -108,6 +103,10 @@ $(function(){
 	               <%= f.text_field :wholesale, class: "input-large align-right" %>　台
 	           </td>
 	      </tr>
+	  </table>
+	  </td>
+	  <td>
+	  <table class="result_form_box_right">
           <tr class="control-group" id="separate-border">
                <td class="form_label"></td>
                <td class="controls">
@@ -145,15 +144,17 @@ $(function(){
 	           </td>
 	      </tr>
 	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :実績, class: "control-label" %></td>
+	           <td class="form_label"><%= f.label :当月予定, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :registration_plan_update, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :当月実績, class: "control-label" %></td>
 	           <td class="controls">
 	               <%= f.text_field :registration_result, class: "input-large align-right" %>　台
 	           </td>
 	      </tr>
-	  </table>
-	  </td>
-	  <td>
-	  <table class="result_form_box_right">
           <tr class="control-group" id="separate-border">
                <td class="form_label"></td>
                <td class="controls">
@@ -164,90 +165,6 @@ $(function(){
 	           <td class="form_label"><%= f.label :中古車　　　　直販受注, class: "control-label" %></td>
 	           <td class="controls">
 	               <%= f.text_field :usedcar, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
-<!--初回1ヶ月点検 -->
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :初回１ヶ月点検　　実施, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :onemonth, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
-<!--初回6ヶ月点検 -->
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :初回６ヶ月点検　　実施, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :sixmonth, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
-<!--12点検・24点検 -->
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :'12点検・24点検　　実施', class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :years, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :対象外実施, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :years_not, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
-<!--車検 -->
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :車検　　　　　　　実施, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :inspection, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :対象外実施, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :inspection_not, class: "input-large align-right" %>　台
-	           </td>
-	      </tr>
-          <tr class="control-group" id="separate-border">
-               <td class="form_label"></td>
-               <td class="controls">
-               </td>
-          </tr>
-<!--任意保険 -->
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :任意保険　　　　　新規, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :insurance_new, class: "input-large align-right" %>　件
-	           </td>
-	      </tr>
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :継続, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :insurance_renew, class: "input-large align-right" %>　件
-	           </td>
-	      </tr>
-	      <tr class="control-group">
-	           <td class="form_label"><%= f.label :解約, class: "control-label" %></td>
-	           <td class="controls">
-	               <%= f.text_field :insurance_cancel, class: "input-large align-right" %>　件
 	           </td>
 	      </tr>
 	  </table>

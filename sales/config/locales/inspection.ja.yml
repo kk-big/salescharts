@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    models:
+        inspection: '車点検・保険'
+    attributes:
+      inspection:
+        user_id: '社員'
+        inspection_ym: '基準年月'
+        onemonth: '初回1ヶ月点検実施'
+        sixmonth: '初回6ヶ月点検実施'
+        years: '12点検・24点検実施'
+        years_not: '12点検・24点検対象外実施'
+        inspection: '車検実施'
+        inspection_not: '車検対象外実施'
+        insurance_new: '任意保険新規'
+        insurance_renew: '任意保険継続'
+        insurance_cancel: '任意保険解約'
+        created_at: 'データ作成日'
+        updated_at: 'データ更新日'
