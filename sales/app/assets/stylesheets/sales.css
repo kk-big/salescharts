@@ -140,7 +140,7 @@ div.x_scroll_box_rowtitle {
   margin-top:-5px;
   float: left;
   width: 165px;
-  height: 615px;
+  height: 710px;
 }
 
 /* 外枠 */
@@ -157,7 +157,7 @@ div.x_scroll_box {
   margin-top:-5px;
   float: left;
   width: 1005px;
-  height: 615px;
+  height: 710px;
   overflow-y: hidden;
   overflow-x: scroll;
 }
