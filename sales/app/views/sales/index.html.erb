@@ -517,8 +517,9 @@ $(function () {
           <%# 残クレ率 %>
           <td class="auto-calc"><%= number_to_percentage(progress_per(sale.newcar_credit, sale.newcar_credit_re), precision:1) %></td>
           <%# 登録可 %>
-	      <td><%= number_with_precision(sale.registration_possible, precision:0) %></td>
-              <% total_registration_possible += nil_to_zero(sale.registration_possible) %>
+          <% registration_possible_all = nil_to_zero(sale.pl_registration_possible) + nil_to_zero(sale.registration_possible) %>
+	      <td><%= number_with_precision(registration_possible_all, precision:0) %></td>
+              <% total_registration_possible += nil_to_zero(registration_possible_all) %>
           <%# 登録可 予定　%>
           <% registration_plan_all = nil_to_zero(sale.registration_plan) + nil_to_zero(sale.registration_plan_update) %>
           <td><%= number_with_precision(registration_plan_all, precision:0) %></td>

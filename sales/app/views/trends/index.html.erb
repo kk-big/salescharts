@@ -353,8 +353,9 @@
             <% chart_percentage_registration[row_count]=0 %>
             <% row_count += 1 %>
           <% end %>
-	      <td><%= number_to_percentage(progress_per(trend.registration_plan, trend.registration_result), precision:1) %></td>
-          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(trend.registration_plan, trend.registration_result), precision:1) %>
+          <% registration_plan_all = nil_to_zero(trend.registration_plan) + nil_to_zero(trend.registration_plan_update) %>
+	      <td><%= number_to_percentage(progress_per(registration_plan_all, trend.registration_result), precision:1) %></td>
+          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(registration_plan_all, trend.registration_result), precision:1) %>
       <% else %>
 	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
                   <% until trend.plan_ym == chart_yyyymm[row_count] do %>
@@ -362,8 +363,9 @@
             <% chart_percentage_registration[row_count]=0 %>
             <% row_count += 1 %>
           <% end %>
-	      <td><%= number_to_percentage(progress_per(trend.registration_plan, trend.registration_result), precision:1) %></td>
-          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(trend.registration_plan, trend.registration_result), precision:1) %>
+          <% registration_plan_all = nil_to_zero(trend.registration_plan) + nil_to_zero(trend.registration_plan_update) %>
+	      <td><%= number_to_percentage(progress_per(registration_plan_all, trend.registration_result), precision:1) %></td>
+          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(registration_plan_all, trend.registration_result), precision:1) %>
       <% end %>
      <% before_name = trend.user_name %>
       <% row_count += 1 %>

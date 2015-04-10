@@ -9,6 +9,7 @@ ja:
         customer: '管理内台数'
         newcar: '新車'
         newcar_balance: '新車前月注残'
+        registration_possible: '新車登録当月可'
         registration_plan: '新車登録当月予定'
         usedcar: '中古車直販'
         onemonth: '初回1ヶ月点検'

@@ -58,21 +58,21 @@ class TrendsController < ApplicationController
 
     @trends = Plan.find_by_sql(['
       select
-        usplre.uid as user_id, usplre.user_name, usplre.plan_ym, usplre.customer, usplre.registration_plan, usplre.display_order, sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive, sum(pl_newcar) as pl_newcar, 
+        usplre.uid as user_id, usplre.user_name, usplre.plan_ym, usplre.customer, usplre.pl_registration_possible, usplre.registration_plan, usplre.display_order, sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive, sum(pl_newcar) as pl_newcar, 
         sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce, sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re,
-        sum(registration_possible) as registration_possible, sum(registration_result) as registration_result, sum(pl_usedcar) as pl_usedcar, sum(usedcar) as usedcar, sum(pl_onemonth) as pl_onemonth, sum(onemonth) as onemonth, sum(pl_sixmonth) as pl_sixmonth, sum(sixmonth) as sixmonth, sum(pl_years) as pl_years, sum(years) as years,
+        sum(registration_plan_update) as registration_plan_update, sum(registration_possible) as registration_possible, sum(registration_result) as registration_result, sum(pl_usedcar) as pl_usedcar, sum(usedcar) as usedcar, sum(pl_onemonth) as pl_onemonth, sum(onemonth) as onemonth, sum(pl_sixmonth) as pl_sixmonth, sum(sixmonth) as sixmonth, sum(pl_years) as pl_years, sum(years) as years,
         sum(years_not) as years_not, sum(pl_inspection) as pl_inspection, sum(inspection) as inspection, sum(inspection_not) as inspection_not, sum(insurance_new) as insurance_new, sum(pl_insurance) as pl_insurance, sum(insurance_renew) as insurance_renew,
         sum(insurance_cancel) as insurance_cancel
        from 
       ((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.role, us.display_order, us.delete_flag,
-       pl.user_id, pl.plan_ym as plan_ym, pl.customer as customer, pl.newcar as pl_newcar, pl.registration_plan as registration_plan, pl.usedcar as pl_usedcar, pl.onemonth as pl_onemonth, pl.sixmonth as pl_sixmonth, pl.years as pl_years, 
+       pl.user_id, pl.plan_ym as plan_ym, pl.customer as customer, pl.newcar as pl_newcar, pl.registration_possible as pl_registration_possible, pl.registration_plan as registration_plan, pl.usedcar as pl_usedcar, pl.onemonth as pl_onemonth, pl.sixmonth as pl_sixmonth, pl.years as pl_years, 
        pl.inspection as pl_inspection, pl.insurance as pl_insurance
        from users us left join plans pl on us.user_id = pl.user_id) as uspl
        full outer join 
       (select user_id, result_ym, 
        sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
        sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce, 
-       sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re, sum(registration_possible) as registration_possible, sum(registration_result) as registration_result,
+       sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re, sum(registration_plan_update) as registration_plan_update, sum(registration_possible) as registration_possible, sum(registration_result) as registration_result,
        sum(usedcar) as usedcar
        from results group by user_id , result_ym) re
        on uspl.uid = re.user_id and uspl.plan_ym = re.result_ym) as usplre
@@ -84,7 +84,7 @@ class TrendsController < ApplicationController
        from inspections group by user_id , inspection_ym) ins
        on usplre.uid = ins.user_id and usplre.plan_ym = ins.inspection_ym
        where usplre.plan_ym >=? and usplre.plan_ym <= ?
-       group by usplre.uid, usplre.user_name, usplre.plan_ym, usplre.customer, usplre.registration_plan, usplre.display_order order by usplre.display_order, usplre.uid, usplre.plan_ym
+       group by usplre.uid, usplre.user_name, usplre.plan_ym, usplre.customer, usplre.pl_registration_possible, usplre.registration_plan, usplre.display_order order by usplre.display_order, usplre.uid, usplre.plan_ym
       ',param_ym_from, param_ym_to ])
 
   end

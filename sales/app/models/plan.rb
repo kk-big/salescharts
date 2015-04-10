@@ -25,6 +25,9 @@ class Plan < ActiveRecord::Base
  # 新車前月注残
   validates :newcar_balance,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
+ # 新車登録当月可
+  validates :registration_possible,
+    :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
  # 新車登録当月予定
   validates :registration_plan,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}

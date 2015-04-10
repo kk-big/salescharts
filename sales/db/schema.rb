@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407053118) do
+ActiveRecord::Schema.define(version: 20150409005135) do
 
   create_table "access_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -53,10 +53,11 @@ ActiveRecord::Schema.define(version: 20150407053118) do
     t.integer  "years"
     t.integer  "inspection"
     t.integer  "insurance"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
     t.integer  "newcar_balance"
     t.integer  "registration_plan"
+    t.integer  "registration_possible"
   end
 
   add_index "plans", ["plan_ym"], name: "index_plans_on_plan_ym", using: :btree
