@@ -14,6 +14,7 @@ ja:
         newcar_replace: '新車受注（代替）'
         newcar_add: '新車受注（増車）'
         newcar_introduce: '新車受注（紹介）'
+        wholesale: '新車業販'
         newcar_cash: '新車受注（現金）'
         newcar_credit: '新車受注（クレジット）'
         newcar_credit_re: '新車受注（残クレ）'

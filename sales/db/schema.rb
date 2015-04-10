@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150317042259) do
+ActiveRecord::Schema.define(version: 20150405061659) do
 
   create_table "access_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -28,8 +28,6 @@ ActiveRecord::Schema.define(version: 20150317042259) do
     t.string   "plan_ym"
     t.integer  "customer"
     t.integer  "newcar"
-    t.integer  "newcar_balance"
-    t.integer  "registration_plan"
     t.integer  "usedcar"
     t.integer  "onemonth"
     t.integer  "sixmonth"
@@ -38,6 +36,8 @@ ActiveRecord::Schema.define(version: 20150317042259) do
     t.integer  "insurance"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "newcar_balance"
+    t.integer  "registration_plan"
   end
 
   add_index "plans", ["plan_ym"], name: "index_plans_on_plan_ym", using: :btree
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 20150317042259) do
     t.integer  "insurance_cancel"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.integer  "wholesale"
   end
 
   add_index "results", ["result_date"], name: "index_results_on_result_date", using: :btree

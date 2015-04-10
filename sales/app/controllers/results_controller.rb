@@ -124,6 +124,6 @@ class ResultsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def result_params
-      params.require(:result).permit(:user_id, :result_ym, :result_date, :negotiations, :assessment, :testdrive, :newcar_new, :newcar_replace, :newcar_add, :newcar_introduce, :newcar_cash, :newcar_credit, :newcar_credit_re, :registration_possible, :registration_result, :usedcar, :onemonth, :sixmonth, :years, :years_not, :inspection, :inspection_not, :insurance_new, :insurance_renew, :insurance_cancel)
+      params.require(:result).permit(:user_id, :result_ym, :result_date, :negotiations, :assessment, :testdrive, :newcar_new, :newcar_replace, :newcar_add, :newcar_introduce, :wholesale, :newcar_cash, :newcar_credit, :newcar_credit_re, :registration_possible, :registration_result, :usedcar, :onemonth, :sixmonth, :years, :years_not, :inspection, :inspection_not, :insurance_new, :insurance_renew, :insurance_cancel)
     end
 end

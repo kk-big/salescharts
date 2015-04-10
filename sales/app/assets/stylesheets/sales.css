@@ -260,7 +260,7 @@ div.x_scroll_box_result_head {
   margin-top:-5px;
   float: left;
   width: 1170px;
-  height: 98px;
+  height: 129px;
 }
 
 div.x_data_area_result {
@@ -310,10 +310,10 @@ div.x_scroll_box_result {
 .three_char{
   width:56px;
 }
-.change_link{
+.years_char{
   font-size:12px;
+  width:54px;
 }
-
 
 /* 実績登録　入力フォームテーブルサイズ */
 .result_form_box {

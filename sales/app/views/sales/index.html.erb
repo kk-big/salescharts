@@ -168,6 +168,7 @@ $(function () {
     <% total_newcar_replace = 0 %>
     <% total_newcar_add = 0 %>
     <% total_newcar_introduce = 0 %>
+    <% total_wholesale = 0 %>
     <% total_progress_newcar = 0 %>
     <% total_newcar = 0 %>
     <% total_newcar_credit = 0 %>
@@ -288,7 +289,7 @@ $(function () {
       <th rowspan="4">試</br>乗</br>件</br>数</th>
 
     <%# 新車 %>
-      <th colspan="18" data-container="body" data-toggle="popover" data-placement="top" title="新車" data-content="計画台数必達">新車</th>
+      <th colspan="19" data-container="body" data-toggle="popover" data-placement="top" title="新車" data-content="計画台数必達">新車</th>
 
     <%# 中古車 %>
       <th colspan="4">中古車直販</th>
@@ -315,7 +316,7 @@ $(function () {
     <%# 新車 %>
       <th rowspan="3">計</br>画</th>
       <th rowspan="3">前</br>月</br>注</br>残</th>
-      <th colspan="10">受注</th>
+      <th colspan="11">受注</th>
       <th colspan="6">登録</th>
 
     <%# 中古車 %>
@@ -388,6 +389,7 @@ $(function () {
     <%# 新車 %>
       <th rowspan="2">新規</th>
       <th colspan="3">既納客</th>
+      <th rowspan="2">業販</th>
       <th rowspan="2">受注</br>合計</th>
       <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車受注進度" data-content="受注合計／計画　100%必達">受注</br>進度
         <%= link_to sales_path(sortkey: 'progress_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
@@ -488,6 +490,9 @@ $(function () {
               <% all_newcar = nil_to_zero(sale.newcar_new) + nil_to_zero(sale.newcar_replace) + nil_to_zero(sale.newcar_add) + nil_to_zero(sale.newcar_introduce) %>
               <% total_newcar += all_newcar %>
               <% chart_newcar.push(number_with_precision(all_newcar, precision:0)) %>
+          <%# 業販 %>
+          <td><%= number_with_precision(sale.wholesale, precision:0) %></td>
+          <% total_wholesale += nil_to_zero(sale.wholesale) %>
           <%# 受注合計 %>
           <td class="auto-calc"><%= number_with_precision(all_newcar, precision:0) %></td>
           <% total_progress_newcar += nil_to_zero(all_newcar) %>
@@ -735,6 +740,7 @@ $(function () {
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_replace) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_add) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_introduce) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_wholesale) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_progress_newcar) %></td>
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_newcar, total_progress_newcar.abs), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_credit) %>

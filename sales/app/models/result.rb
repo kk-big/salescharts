@@ -33,6 +33,9 @@ class Result < ActiveRecord::Base
  # 新車受注紹介台数
    validates :newcar_introduce,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
+ # 新車業販台数
+   validates :wholesale,
+    :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
  # 新車受注現金台数
    validates :newcar_cash,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
