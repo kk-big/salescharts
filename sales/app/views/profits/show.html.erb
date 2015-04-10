@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>社員:</strong>
+  <%= @profit.user.user_name %>
+</p>
+<p>
+  <strong>基準年月:</strong>
+  <%= yyyymm_slash(@profit.profit_ym) %>
+</p>
+<p>
+  <strong>新車売上台数:</strong>
+  <%= @profit.number_of_newcar %>
+</p>
+<p>
+  <strong>新車売上金額:</strong>
+  <%= number_to_currency(@profit.sales_of_newcar, :unit => "￥", :format => "%u%n") %>
+</p>
+<p>
+  <strong>新車粗利金額:</strong>
+  <%= number_to_currency(@profit.profit_of_newcar, :unit => "￥", :format => "%u%n") %>
+</p>
+<p>
+  <strong>中古車売上台数:</strong>
+  <%= @profit.number_of_usedcar %>
+</p>
+<p>
+  <strong>中古車売上金額:</strong>
+  <%= number_to_currency(@profit.sales_of_usedcar, :unit => "￥", :format => "%u%n") %>
+</p>
+<p>
+  <strong>中古車粗利金額:</strong>
+  <%= number_to_currency(@profit.profit_of_usedcar, :unit => "￥", :format => "%u%n") %>
+</p>
+<p>
+  <strong>サービス入庫台数:</strong>
+  <%= @profit.number_of_service %>
+</p>
+<p>
+  <strong>サービス売上金額:</strong>
+  <%= number_to_currency(@profit.sales_of_service, :unit => "￥", :format => "%u%n") %>
+</p>
+<p>
+  <strong>サービス粗利金額:</strong>
+  <%= number_to_currency(@profit.profit_of_service, :unit => "￥", :format => "%u%n") %>
+</p>
+
+<%= link_to '変更', edit_profit_path(@profit) %> |
+<%= link_to '戻る', profits_path %>

@@ -1,0 +1,16 @@
+<div class="main">
+<%= form_tag(log_logins_path) do %>
+
+<div class="form">
+<p id="title">売上管理システム - ログイン -</p>
+  <p class="text-danger" ><%= @flash_now_alert %></p>
+  <div><%= text_field_tag :login_id, params[:login_id], placeholder: "ユーザーID",  :class => "input-small"  %></div>
+  <div><%= password_field_tag :login_pass, params[:login_pass], placeholder: "パスワード",  :class => "input-small"  %></div>
+  <div>
+    <%= button_tag( class: "btn btn-primary") do %>
+    <%= content_tag :login, "ログイン", class: "glyphicon glyphicon-lock" %>
+  </div>
+<% end %>
+</div>
+<% end %>
+</div>

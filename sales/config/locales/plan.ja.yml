@@ -1,0 +1,20 @@
+ja:
+  activerecord:
+    models:
+        plan: '営業計画'
+    attributes:
+      plan:
+        user_id: '社員'
+        plan_ym: '基準年月'
+        customer: '管理内台数'
+        newcar: '新車'
+        newcar_balance: '新車前月注残'
+        registration_plan: '新車登録当月予定'
+        usedcar: '中古車直販'
+        onemonth: '初回1ヶ月点検'
+        sixmonth: '初回6ヶ月点検'
+        years: '12点検・24点検'
+        inspection: '車検'
+        insurance: '任意保険継続'
+        created_at: 'データ作成日'
+        updated_at: 'データ更新日'

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  operation_time: 
+  ip_address: MyString
+  user_id: MyString
+  url: MyText
+  action: MyString
+  parameters: MyText
+
+two:
+  operation_time: 
+  ip_address: MyString
+  user_id: MyString
+  url: MyText
+  action: MyString
+  parameters: MyText

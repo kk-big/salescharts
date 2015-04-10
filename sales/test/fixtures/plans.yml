@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  plan_ym: MyString
+  customer: 1
+  newcar: 1
+  usedcar: 1
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  inspection: 1
+  insurance: 1
+
+two:
+  user_id: MyString
+  plan_ym: MyString
+  customer: 1
+  newcar: 1
+  usedcar: 1
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  inspection: 1
+  insurance: 1

@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>社員:</strong>
+  <%= @plan.user.user_name %>
+</p>
+<p>
+  <strong>基準年月:</strong>
+  <%= yyyymm_slash(@plan.plan_ym) %>
+</p>
+<p>
+  <strong>管理内台数:</strong>
+  <%= @plan.customer %>
+</p>
+<p>
+  <strong>新車計画:</strong>
+  <%= @plan.newcar %>
+</p>
+<p>
+  <strong>新車前月注残:</strong>
+  <%= @plan.newcar_balance %>
+</p>
+<p>
+  <strong>新車登録当月予定:</strong>
+  <%= @plan.registration_plan %>
+</p>
+<p>
+  <strong>中古車直版:</strong>
+  <%= @plan.usedcar %>
+</p>
+<p>
+  <strong>初回1ヶ月点検:</strong>
+  <%= @plan.onemonth %>
+</p>
+<p>
+  <strong>初回6ヶ月点検:</strong>
+  <%= @plan.sixmonth %>
+</p>
+<p>
+  <strong>12点検・24点検:</strong>
+  <%= @plan.years %>
+</p>
+<p>
+  <strong>車検:</strong>
+  <%= @plan.inspection %>
+</p>
+<p>
+  <strong>任意保険継続:</strong>
+  <%= @plan.insurance %>
+</p>
+
+<%= link_to '変更', edit_plan_path(@plan) %> |
+<%= link_to '戻る', plans_path %>

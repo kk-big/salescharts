@@ -1,0 +1,73 @@
+<p id="z"><%= notice %></p>
+
+<h4>ユーザー一覧</h4>
+
+<div class="float-right">
+ <%= link_to sanitize('<i class="glyphicon glyphicon-pencil"></i> ') + '新規登録', new_user_path, class: "btn btn-danger" %>
+</div>
+
+ <table class="table table-condensed table-hover table-striped user-table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>社員名</th>
+      <th>ユーザーID</th>
+      <th>担当コード</th>
+      <th>役職</th>
+      <th>職種</th>
+      <th>権限</th>
+      <th>表示順</th>
+      <th>アカウント状態</th>
+      <th colspan="1"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% count = 0 %>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= count +=1 %></td>
+        <td id="align-left"><%= user.user_name %></td>
+        <td id="align-left"><%= user.user_id %></td>
+        <td><%= format("%03d", user.emp_no) unless user.emp_no.blank? %></td>
+		<td><%case user.position 
+		    when '1' %>
+              <%='店長' %>
+		    <%when '2' %>
+              <%='課長' %>
+		    <%when '3' %>
+              <%='係長' %>
+		    <%when '4' %>
+              <%='主任' %>
+		   <%else %>
+              <%='一般' %>
+		   <%end%>
+		</td>
+        <td><%case user.job
+		    when '1' %>
+              <%='営業' %>
+		    <%when '2' %>
+              <%='その他' %>
+		   <%end%>
+        </td>
+        <td><%case user.role
+            when '1' %>
+              <%='参照' %>
+		    <%when '2' %>
+              <%='更新' %>
+		   <%end%>
+        </td>
+        <td id="align-right"><%= user.display_order %></td>
+        <td><% if user.delete_flag == '1' then %>
+              <%='無効' %>
+            <% else %>
+              <%='有効' %>
+            <% end %>
+        </td>
+        <td><%= link_to '変更', edit_user_path(user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

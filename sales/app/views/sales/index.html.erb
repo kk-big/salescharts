@@ -1,0 +1,929 @@
+<% unless notice.blank? %>
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
+
+<%= javascript_tag do %>
+  var data = {'data-date-format': 'YYYYMM' };
+  $(function(){
+    $('.datepicker').attr(data);
+    $('.datepicker').datetimepicker();
+  });
+  
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+<% end %>
+
+<h4>営業活動実績</h4>
+
+
+<table id="chart-select">
+  <tr>
+<td>
+	<!-- 検索フォーム -->
+<div id="search_form_box">
+<%= form_tag(sales_path, method: :get, id: :search_form ) do %>
+  <div class="field calender">
+    <%= label_tag(:sale_ym, "基準年月", { :class => "search-label" } ) %>
+    <%= text_field_tag(:sale_ym_from, @sale_ym_from ,{ :class => "input-mini datepicker" } ) %>
+    ～
+    <%= text_field_tag(:sale_ym_to, @sale_ym_to ,{ :class => "input-mini datepicker"} ) %>
+    <%= button_tag(type: 'submit', class: "btn btn-default") do %>
+    <span class="glyphicon glyphicon-search"></span> 
+    <% end %>
+    <button class="btn btn-default" type="button" onclick="clearSearchForm()"><i class="glyphicon glyphicon-remove"></i></button>　
+  </div>
+<% end %>
+</div>			
+
+</td>
+    <!-- グラフ選択  -->
+<td>
+	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" id="graph-bar"><i class="fa fa-bar-chart"></i>
+          グラフ
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">実績グラフ選択</h4>
+	      </div>
+	      <div class="modal-body">
+	
+<%= form_tag(charts_path, method: :post, :target => "_blank") do %>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_3s",true%>
+			         【商談・査定・試乗】件数
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_newcar",false%>
+			         【新車】受注・登録台数、計画進度
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_usedcar",false%>
+			         【中古車】受注台数、計画進度
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_onemonth",false%>
+			         【初回1ヶ月点検】実施台数
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_sixmonth",false%>
+			         【初回6ヶ月点検】実施台数
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_years",false%>
+			         【12点検・24点検】実施台数、実施率
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_inspection",false%>
+			         【車検】実施台数、実施率
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_insurance",false%>
+			         【任意保険】新規・継続件数、実施率
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_profit_of_newcar",false%>
+			         【新車】売上台数、売上額・粗利額
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_profit_of_usedcar",false%>
+			         【中古車】売上台数、売上額・粗利額
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_profit_of_service",false%>
+			         【サービス】入庫台数、売上額・粗利額
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_bar,"chart_profit_of_all",false%>
+			         【総売上・粗利】金額、利益率
+			  </label>
+			</div>
+
+            <%= hidden_field_tag(:chart_cat, 'bar' ,{ :class => "input-mini" } ) %>
+	      <div class="modal-footer">
+            <%= submit_tag("OK", { :class => "btn btn-primary" }) %>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+	      </div>
+
+	    </div>
+	  </div>
+	</div>
+</td>
+  </tr>
+</table>
+
+<table><tr><td>
+<div class="x_data_area_rowtitle">
+<div class="x_scroll_box_rowtitle">
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <tr>
+      <th rowspan="3" id="check"><INPUT type="checkbox" class="checkbox" id="all_list" name="check" checked="checked"  onclick="check_all()"></th>
+      <th rowspan="3" id="no">No</th>
+      <th rowspan="3" id="name">社員</th>
+    </tr>
+  </thead>
+
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% total_customer = 0 %>
+    <% total_negotiations = 0 %>
+    <% total_assessment = 0 %>
+    <% total_testdrive = 0 %>
+    <% total_pl_newcar = 0 %>
+    <% total_newcar_balance = 0 %>
+    <% total_newcar_new = 0 %>
+    <% total_newcar_replace = 0 %>
+    <% total_newcar_add = 0 %>
+    <% total_newcar_introduce = 0 %>
+    <% total_progress_newcar = 0 %>
+    <% total_newcar = 0 %>
+    <% total_newcar_credit = 0 %>
+    <% total_newcar_credit_re = 0 %>
+    <% total_registration_possible = 0 %>
+    <% total_registration_plan = 0 %>
+    <% total_registration_result = 0 %>
+    <% total_balance = 0 %>
+    <% total_pl_usedcar = 0 %>
+    <% total_usedcar = 0 %>
+    <% total_progress_usedcar = 0 %>
+    <% total_pl_onemonth = 0 %>
+    <% total_onemonth = 0 %>
+    <% total_pl_sixmonth = 0 %>
+    <% total_sixmonth = 0 %>
+    <% total_pl_years = 0 %>
+    <% total_years = 0 %>
+    <% total_years_not = 0 %>
+    <% total_all_years = 0 %>
+	<% total_pl_inspection = 0 %>
+    <% total_inspection = 0 %>
+    <% total_inspection_not = 0 %>
+    <% total_all_inspection = 0 %>
+    <% total_insurance_new = 0 %>
+	<% total_pl_insurance = 0 %>
+    <% total_insurance_renew = 0 %>
+    <% total_down_insurance = 0 %>
+    <% total_insurance_cancel = 0 %>
+    <% total_number_of_newcar = 0 %>
+    <% total_sales_of_newcar = 0 %>
+    <% total_profit_of_newcar = 0 %>
+    <% total_number_of_usedcar = 0 %>
+    <% total_sales_of_usedcar = 0 %>
+    <% total_profit_of_usedcar = 0 %>
+    <% total_number_of_service = 0 %>
+    <% total_sales_of_service = 0 %>
+    <% total_profit_of_service = 0 %>
+    <% total_all_profit = 0 %>
+    <% total_all_sales = 0 %>
+
+    <%# グラフ値 %>
+    <% chart_user_name = Array.new() %>
+    <% chart_negotiations = Array.new() %>
+    <% chart_assessment = Array.new() %>
+    <% chart_testdrive = Array.new() %>
+    <% chart_pl_newcar = Array.new() %>
+    <% chart_newcar = Array.new() %>
+    <% chart_percentage_newcar = Array.new() %>
+    <% chart_registration_result = Array.new() %>
+    <% chart_percentage_registration = Array.new() %>
+    <% chart_pl_usedcar = Array.new() %>
+    <% chart_usedcar = Array.new() %>
+    <% chart_percentage_usedcar = Array.new() %>
+    <% chart_pl_onemonth = Array.new() %>
+    <% chart_onemonth = Array.new() %>
+    <% chart_pl_sixmonth = Array.new() %>
+    <% chart_sixmonth = Array.new() %>
+    <% chart_pl_years = Array.new() %>
+    <% chart_years = Array.new() %>
+    <% chart_years_not = Array.new() %>
+    <% chart_percentage_all_years = Array.new() %>
+    <% chart_pl_inspection = Array.new() %>
+    <% chart_inspection = Array.new() %>
+    <% chart_inspection_not = Array.new() %>
+    <% chart_percentage_all_inspection = Array.new() %>
+    <% chart_pl_insurance = Array.new() %>
+    <% chart_insurance_new = Array.new() %>
+    <% chart_insurance_renew = Array.new() %>
+    <% chart_percentage_insurance_renew = Array.new() %>
+
+    <% chart_number_of_newcar = Array.new() %>
+    <% chart_sales_of_newcar = Array.new() %>
+    <% chart_profit_of_newcar = Array.new() %>
+    <% chart_percentage_profit_of_newcar = Array.new() %>
+    <% chart_number_of_usedcar = Array.new() %>
+    <% chart_sales_of_usedcar = Array.new() %>
+    <% chart_profit_of_usedcar = Array.new() %>
+    <% chart_percentage_profit_of_usedcar = Array.new() %>
+    <% chart_number_of_service = Array.new() %>
+    <% chart_profit_of_service = Array.new() %>
+    <% chart_sales_of_service = Array.new() %>
+    <% chart_percentage_profit_of_service = Array.new() %>
+    <% chart_sales_of_all = Array.new() %>
+    <% chart_profit_of_all = Array.new() %>
+    <% chart_percentage_profit_of_all = Array.new() %>
+
+    <% @sales.each do |sale| %>
+      <%# 営業が対象 %>
+	    <tr>
+        <%# チェックボックス %>
+          <td><%= check_box 'check_on', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+        <%# No %>
+          <td><%= count +=1 %></td>
+        <%# 社員名 %>
+	      <td id="align-left"><%= sale.user_name %></td>
+           <% chart_user_name.push(sale.user_name) %>
+	    </tr>
+    <% end %>
+        <tr>
+        <%# 合計行%>
+          <td class="auto-calc" id="border-sum"><%= "" %></td>
+          <td class="auto-calc" id="border-sum"><%= "" %></td>
+          <td id="name_sum" class="auto-calc"><%= "東津田店計" %></td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</td>
+<td>
+<div class="x_data_area">
+<div class="x_scroll_box">
+<table class="table table-condensed table-bordered table-hover table-striped search_result_index">
+  <thead>
+    <tr>
+      <th rowspan="4">管</br>理</br>内</br>台</br>数</th>
+      <th id="negotiations" rowspan="4">商</br>談</br>件</br>数</th>
+      <th rowspan="4">査</br>定</br>件</br>数</th>
+      <th rowspan="4">試</br>乗</br>件</br>数</th>
+
+    <%# 新車 %>
+      <th colspan="18" data-container="body" data-toggle="popover" data-placement="top" title="新車" data-content="計画台数必達">新車</th>
+
+    <%# 中古車 %>
+      <th colspan="4">中古車直販</th>
+
+    <%# 点検 %>
+      <th colspan="2">初回1ヶ月点検</th>
+      <th colspan="2">初回6ヶ月点検</th>
+      <th colspan="5" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="実施率50%以上">12点検・24点検</th>
+
+    <%# 車検 %>
+      <th colspan="5" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="実施率70%以上">車検</th>
+      
+    <%# 任意保険 %>
+      <th colspan="6" data-container="body" data-toggle="popover" data-placement="top" title="任意保険" data-content="新規1件/人　継続100%">任意保険</th>
+
+    <%# 粗利 %>
+      <th colspan="4">新車</th>
+      <th colspan="4">中古車</th>
+      <th colspan="4">サービス</th>
+      <th colspan="3">総売上・粗利</th>
+
+    </tr>
+    <tr>
+    <%# 新車 %>
+      <th rowspan="3">計</br>画</th>
+      <th rowspan="3">前</br>月</br>注</br>残</th>
+      <th colspan="10">受注</th>
+      <th colspan="6">登録</th>
+
+    <%# 中古車 %>
+      <th rowspan="3">計画</th>
+      <th rowspan="3">受注</th>
+      <th rowspan="3"colspan="2" data-container="body" data-toggle="popover" data-placement="top" title="中古車 受注進度" data-content="受注／計画 100%必達">受注進度
+        <%= link_to sales_path(sortkey: 'progress_usedcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+
+    <%# 点検 %>
+      <th rowspan="3">対象</br>台数</th>
+      <th rowspan="3">実施</br>台数</th>
+
+      <th rowspan="3">対象</br>台数</th>
+      <th rowspan="3">実施</br>台数</th>
+
+      <th rowspan="3">対象</br>台数</th>
+      <th rowspan="3">実施</br>台数</th>
+      <th rowspan="3">対象外</br>実施</th>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="50%以上">総</br>実施</th>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="50%以上">実施率</br>
+        <%= link_to sales_path(sortkey: 'progress_years desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+
+    <%# 車検 %>
+      <th rowspan="3">対象</br>台数</th>
+      <th rowspan="3">実施</br>台数</th>
+      <th rowspan="3">対象外</br>実施</th>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="70%以上">総</br>実施</th>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="70%以上">実施率</br>
+        <%= link_to sales_path(sortkey: 'progress_inspection desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      
+    <%# 任意保険 %>
+      <th rowspan="3">新規</th>
+      <th colspan="4">継続</th>
+      <th rowspan="3">解約</th>
+
+    <%# 粗利 %>
+      <th rowspan="3">売上</br>台数</th>
+      <th rowspan="3">売上</br>金額</th>
+      <th rowspan="3">粗利</th>
+      <th rowspan="3">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="3">売上</br>台数</th>
+      <th rowspan="3">売上</br>金額</th>
+      <th rowspan="3">粗利</th>
+      <th rowspan="3">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_usedcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="3">入庫</br>台数</th>
+      <th rowspan="3">入庫</br>金額</th>
+      <th rowspan="3">粗利</th>
+      <th rowspan="3">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_profit_of_service desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="3">売上金額</br>(千円)
+        <%= link_to sales_path(sortkey: 'all_sales desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="3">粗利金額</br>(千円)
+        <%= link_to sales_path(sortkey: 'all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="3">利益率</br>
+        <%= link_to sales_path(sortkey: 'per_all_profit desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+
+    </tr>
+    <tr>
+    <%# 新車 %>
+      <th rowspan="2">新規</th>
+      <th colspan="3">既納客</th>
+      <th rowspan="2">受注</br>合計</th>
+      <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車受注進度" data-content="受注合計／計画　100%必達">受注</br>進度
+        <%= link_to sales_path(sortkey: 'progress_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th colspan="4">クレジット</th>
+      <th colspan="3">当月可</th>
+      <th rowspan="2">登録済</th>
+      <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／予定　100%必達">登録</br>進度
+        <%= link_to sales_path(sortkey: 'progress_registration desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+      <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="新車注残" data-content="前月注残＋受注合計">注残</th>
+
+    <%# 中古車 %>
+
+    <%# 点検 %>
+
+    <%# 車検 %>
+      
+    <%# 任意保険 %>
+      <th rowspan="2">対象</th>
+      <th rowspan="2">継続</th>
+      <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="任意保険" data-content="継続100%">落ち</th>
+      <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="任意保険" data-content="継続100%">率
+        <%= link_to sales_path(sortkey: 'progress_insurance_renew desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
+      </th>
+
+    <%# 粗利 %>
+
+    </tr>
+    <tr>
+    <%# 新車 %>
+      <th>代替</th>
+      <th>増車</th>
+      <th>紹介</th>
+      <th>ｸﾚｼﾞｯﾄ</th>
+      <th>ｸﾚｼﾞｯﾄ率</th>
+      <th>残ｸﾚ</th>
+      <th>残ｸﾚ率</th>
+      <th>当月可</th>
+      <th>予定</th>
+      <th data-container="body" data-toggle="popover" data-placement="top" title="新車登録NG率" data-content="予定／当月可">NG率</th>
+
+    <%# 中古車 %>
+
+    <%# 点検 %>
+
+    <%# 車検 %>
+      
+    <%# 任意保険 %>
+
+    <%# 粗利 %>
+
+    </tr>
+  </thead>
+
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% @sales.each do |sale| %>
+      <%# 営業が対象 %>
+	    <tr>
+	    <%# 管理内台数 %>
+	      <td><%= sale.customer %></td>
+              <% total_customer += nil_to_zero(sale.customer) %>
+	    <%# 3S %>
+          <%# 商談件数 %>
+	      <td><%= number_with_precision(sale.negotiations, precision:0) %></td>
+              <% total_negotiations += nil_to_zero(sale.negotiations) %>
+              <% chart_negotiations.push(number_with_precision(nil_to_zero(sale.negotiations), precision:0)) %>
+          <%# 査定件数 %>
+          <td><%= number_with_precision(sale.assessment, precision:0) %></td>
+              <% total_assessment += nil_to_zero(sale.assessment) %>
+              <% chart_assessment.push(number_with_precision(nil_to_zero(sale.assessment), precision:0)) %>
+          <%# 試乗件数 %>
+          <td><%= number_with_precision(sale.testdrive, precision:0) %></td>
+              <% total_testdrive += nil_to_zero(sale.testdrive) %>
+              <% chart_testdrive.push(number_with_precision(nil_to_zero(sale.testdrive), precision:0)) %>
+
+	    <%# 新車 %>
+          <%# 計画 %>
+	      <td><%= sale.pl_newcar %></td>
+              <% total_pl_newcar += nil_to_zero(sale.pl_newcar) %>
+              <% chart_pl_newcar.push(number_with_precision(nil_to_zero(sale.pl_newcar), precision:0)) %>
+          <%# 前月注残 %>
+	      <td><%= sale.newcar_balance %></td>
+              <% total_newcar_balance += nil_to_zero(sale.newcar_balance) %>
+          <%# 受注新規 %>
+          <td><%= number_with_precision(sale.newcar_new, precision:0) %></td>
+              <% total_newcar_new += nil_to_zero(sale.newcar_new) %>
+          <%# 受注代替 %>
+          <td><%= number_with_precision(sale.newcar_replace, precision:0) %></td>
+              <% total_newcar_replace += nil_to_zero(sale.newcar_replace) %>
+          <%# 受注増車 %>
+          <td><%= number_with_precision(sale.newcar_add, precision:0) %></td>
+              <% total_newcar_add += nil_to_zero(sale.newcar_add) %>
+          <%# 受注紹介 %>
+          <td><%= number_with_precision(sale.newcar_introduce, precision:0) %></td>
+              <% total_newcar_introduce += nil_to_zero(sale.newcar_introduce) %>
+              <% all_newcar = nil_to_zero(sale.newcar_new) + nil_to_zero(sale.newcar_replace) + nil_to_zero(sale.newcar_add) + nil_to_zero(sale.newcar_introduce) %>
+              <% total_newcar += all_newcar %>
+              <% chart_newcar.push(number_with_precision(all_newcar, precision:0)) %>
+          <%# 受注合計 %>
+          <td class="auto-calc"><%= number_with_precision(all_newcar, precision:0) %></td>
+          <% total_progress_newcar += nil_to_zero(all_newcar) %>
+          <%# 受注進度 %>
+          <% if equal100(progress_per(sale.pl_newcar, all_newcar)) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_newcar, all_newcar), precision:1) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_newcar, all_newcar), precision:1) %></td>
+          <% end %>
+              <% chart_percentage_newcar.push(number_with_precision(progress_per(sale.pl_newcar, all_newcar), precision:1)) %>
+          <%# クレジット %>
+	      <td><%= number_with_precision(sale.newcar_credit, precision:0) %></td>
+              <% total_newcar_credit += nil_to_zero(sale.newcar_credit) %>
+          <%# クレジット率 %>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(all_newcar, sale.newcar_credit), precision:1) %></td>
+          <%# 残クレ %>
+	      <td><%= number_with_precision(sale.newcar_credit_re, precision:0) %></td>
+              <% total_newcar_credit_re += nil_to_zero(sale.newcar_credit_re) %>
+          <%# 残クレ率 %>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.newcar_credit, sale.newcar_credit_re), precision:1) %></td>
+          <%# 登録可 %>
+	      <td><%= number_with_precision(sale.registration_possible, precision:0) %></td>
+              <% total_registration_possible += nil_to_zero(sale.registration_possible) %>
+          <%# 登録可 予定　%>
+          <td><%= number_with_precision(sale.registration_plan, precision:0) %></td>
+          <% total_registration_plan += nil_to_zero(sale.registration_plan) %>
+          <%# 登録可 NG率　%>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_possible, sale.registration_plan), precision:1) %></td>
+          <%# 登録済 %>
+          <td><%= number_with_precision(sale.registration_result, precision:0) %></td>
+          <% total_registration_result += nil_to_zero(sale.registration_result) %>
+          <% chart_registration_result.push(number_with_precision(nil_to_zero(sale.registration_result), precision:0)) %>
+          <%# 登録進度％ %>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.registration_plan, sale.registration_result), precision:1) %></td>
+          <% chart_percentage_registration.push(number_with_precision(progress_per(sale.registration_plan, sale.registration_result), precision:1)) %>
+          <%# 注残 %>
+          <% newcar_balance = nil_to_zero(sale.newcar_balance) + all_newcar %>
+          <td class="auto-calc"><%= number_with_precision(newcar_balance, precision:0) %></td>
+          <% total_balance += newcar_balance %>
+
+	    <%# 中古車 %>
+	      <%# 計画  %>
+	      <td><%= number_with_precision(sale.pl_usedcar, precision:0) %></td>
+              <% total_pl_usedcar += nil_to_zero(sale.pl_usedcar) %>
+              <% chart_pl_usedcar.push(number_with_precision(nil_to_zero(sale.pl_usedcar), precision:0)) %>
+	      <%# 受注 %>
+	      <td><%= number_with_precision(sale.usedcar, precision:0) %></td>
+              <% total_usedcar += nil_to_zero(sale.usedcar) %>
+              <% chart_usedcar.push(number_with_precision(nil_to_zero(sale.usedcar), precision:0)) %>
+	      <%# 計画進度 %>
+          <% progress_usedcar = progress(sale.pl_usedcar, sale.usedcar) %>
+          <% if equal100(progress_per(sale.pl_usedcar, sale.usedcar)) %>
+            <td class="auto-calc"><%= progress_usedcar %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= progress_usedcar %></td>
+          <% end %>
+              <% total_progress_usedcar += nil_to_zero(progress_usedcar) %>
+          <% if equal100(progress_per(sale.pl_usedcar, sale.usedcar)) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_usedcar, sale.usedcar), precision:1) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_usedcar, sale.usedcar), precision:1) %></td>
+          <% end %>
+              <% chart_percentage_usedcar.push(number_with_precision(progress_per(sale.pl_usedcar, sale.usedcar), precision:1)) %>
+
+        <%# 初回1ヶ月点検%>
+	      <%# 対象  %>
+	      <td><%= number_with_precision(sale.pl_onemonth, precision:0) %></td>
+              <% total_pl_onemonth += nil_to_zero(sale.pl_onemonth) %>
+              <% chart_pl_onemonth.push(number_with_precision(nil_to_zero(sale.pl_onemonth), precision:0)) %>
+	      <%# 実施  %>
+          <td><%= number_with_precision(sale.onemonth, precision:0) %></td>
+              <% total_onemonth += nil_to_zero(sale.onemonth) %>
+              <% chart_onemonth.push(number_with_precision(nil_to_zero(sale.onemonth), precision:0)) %>
+        <%# 初回6ヶ月点検%>
+	      <%# 対象  %>
+	      <td><%= number_with_precision(sale.pl_sixmonth, precision:0) %></td>
+              <% total_pl_sixmonth += nil_to_zero(sale.pl_sixmonth) %>
+              <% chart_pl_sixmonth.push(number_with_precision(nil_to_zero(sale.pl_sixmonth), precision:0)) %>
+	      <%# 実施  %>
+          <td><%= number_with_precision(sale.sixmonth, precision:0) %></td>
+              <% total_sixmonth += nil_to_zero(sale.sixmonth) %>
+              <% chart_sixmonth.push(number_with_precision(nil_to_zero(sale.sixmonth), precision:0)) %>
+	    <%# 12点検・24点検%>
+	      <%# 対象  %>
+	      <td><%= number_with_precision(sale.pl_years, precision:0) %></td>
+              <% total_pl_years += nil_to_zero(sale.pl_years) %>
+              <% chart_pl_years.push(number_with_precision(nil_to_zero(sale.pl_years), precision:0)) %>
+	      <%# 実施  %>
+          <td><%= number_with_precision(sale.years, precision:0) %></td>
+              <% total_years += nil_to_zero(sale.years) %>
+              <% chart_years.push(number_with_precision(nil_to_zero(sale.years), precision:0)) %>
+	      <%# 対象外実施  %>
+          <td><%= number_with_precision(sale.years_not, precision:0) %></td>
+              <% total_years_not += nil_to_zero(sale.years_not) %>
+              <% chart_years_not.push(number_with_precision(nil_to_zero(sale.years_not), precision:0)) %>
+	      <%# 総実施  %>
+              <% all_years = nil_to_zero(sale.years) + nil_to_zero(sale.years_not) %>
+          <% if over50(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not))) %>
+            <td class="auto-calc"><%= number_with_precision(all_years, precision:0) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_with_precision(all_years, precision:0) %></td>
+          <% end %>
+              <% total_all_years += nil_to_zero(all_years) %>
+	      <%# 実施率  %>
+          <% if over50(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not))) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1) %></td>
+          <% end %>
+          <% chart_percentage_all_years.push(number_with_precision(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1)) %>
+
+	    <%# 車検%>
+	      <%# 対象  %>
+	      <td><%= number_with_precision(sale.pl_inspection, precision:0) %></td>
+	          <% total_pl_inspection += nil_to_zero(sale.pl_inspection) %>
+              <% chart_pl_inspection.push(number_with_precision(nil_to_zero(sale.pl_inspection), precision:0)) %>
+	      <%# 実施  %>
+          <td><%= number_with_precision(sale.inspection, precision:0) %></td>
+              <% total_inspection += nil_to_zero(sale.inspection) %>
+              <% chart_inspection.push(number_with_precision(nil_to_zero(sale.inspection), precision:0)) %>
+	      <%# 対象外実施  %>
+          <td><%= number_with_precision(sale.inspection_not, precision:0) %></td>
+              <% total_inspection_not += nil_to_zero(sale.inspection_not) %>
+              <% chart_inspection_not.push(number_with_precision(nil_to_zero(sale.inspection_not), precision:0)) %>
+	      <%# 総実施  %>
+              <% all_inspection = nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not) %>
+          <% if over70(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not))) %>
+            <td class="auto-calc"><%= number_with_precision(all_inspection, precision:0) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_with_precision(all_inspection, precision:0) %></td>
+          <% end %>
+              <% total_all_inspection += nil_to_zero(all_inspection) %>
+	      <%# 実施率  %>
+          <% if over70(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not))) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1) %></td>
+          <% end %>
+              <% chart_percentage_all_inspection.push(number_with_precision(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1)) %>
+
+	    <%# 任意保険 %>
+	      <%# 新規  %>
+          <td><%= number_with_precision(sale.insurance_new, precision:0) %></td>
+	          <% total_insurance_new += nil_to_zero(sale.insurance_new) %>
+              <% chart_insurance_new.push(number_with_precision(nil_to_zero(sale.insurance_new), precision:0)) %>
+	      <%# 継続対象  %>
+	      <td><%= number_with_precision(sale.pl_insurance, precision:0) %></td>
+	          <% total_pl_insurance += nil_to_zero(sale.pl_insurance) %>
+              <% chart_pl_insurance.push(number_with_precision(nil_to_zero(sale.pl_insurance), precision:0)) %>
+	      <%# 継続  %>
+          <td><%= number_with_precision(sale.insurance_renew, precision:0) %></td>
+	          <% total_insurance_renew += nil_to_zero(sale.insurance_renew) %>
+              <% chart_insurance_renew.push(number_with_precision(nil_to_zero(sale.insurance_renew), precision:0)) %>
+	      <%# 落ち  %>
+	          <% down_insurance = nil_to_zero(sale.pl_insurance) - nil_to_zero(sale.insurance_renew) %>
+          <% if equal100(progress_per(sale.pl_insurance, sale.insurance_renew)) %>
+            <td class="auto-calc"><%= number_with_precision(down_insurance, precision:0) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_with_precision(down_insurance, precision:0) %></td>
+          <% end %>
+	          <% total_down_insurance += nil_to_zero(down_insurance) %>
+	      <%# 継続率  %>
+          <% if equal100(progress_per(sale.pl_insurance, sale.insurance_renew)) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_insurance, sale.insurance_renew), precision:1) %></td>
+          <% else %>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_insurance, sale.insurance_renew), precision:1) %></td>
+          <% end %>
+              <% chart_percentage_insurance_renew.push(number_with_precision(progress_per(sale.pl_insurance, sale.insurance_renew), precision:1)) %>
+	      <%# 解約  %>
+          <td><%= number_with_precision(sale.insurance_cancel, precision:0) %></td>
+	          <% total_insurance_cancel += nil_to_zero(sale.insurance_cancel) %>
+
+	    <%# 粗利 %>
+	      <%# 新車台数 %>
+	      <td><%= number_with_precision(sale.number_of_newcar, precision:0) %></td>
+	          <% total_number_of_newcar += nil_to_zero(sale.number_of_newcar) %>
+              <% chart_number_of_newcar.push(number_with_precision(nil_to_zero(sale.number_of_newcar), precision:0)) %>
+	      <%# 新車売上 %>
+          <td><%= number_to_currency(sale.sales_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_sales_of_newcar += nil_to_zero(sale.sales_of_newcar) %>
+              <% chart_sales_of_newcar.push(number_with_precision(nil_to_zero(sale.sales_of_newcar), precision:0)) %>
+	      <%# 新車粗利 %>
+          <td><%= number_to_currency(sale.profit_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_profit_of_newcar += nil_to_zero(sale.profit_of_newcar) %>
+              <% chart_profit_of_newcar.push(number_with_precision(nil_to_zero(sale.profit_of_newcar), precision:0)) %>
+	      <%# 新車利益率 %>
+          <td class="auto-calc"><%= number_to_percentage(profit_per(nil_to_zero(sale.profit_of_newcar), nil_to_zero(sale.sales_of_newcar)), precision:1) %></td>
+              <% chart_percentage_profit_of_newcar.push(number_with_precision(profit_per(nil_to_zero(sale.profit_of_newcar), nil_to_zero(sale.sales_of_newcar)), precision:1)) %>
+	      <%# 中古車台数 %>
+          <td><%= number_with_precision(sale.number_of_usedcar, precision:0) %></td>
+	          <% total_number_of_usedcar += nil_to_zero(sale.number_of_usedcar) %>
+              <% chart_number_of_usedcar.push(number_with_precision(nil_to_zero(sale.number_of_usedcar), precision:0)) %>
+	      <%# 中古車売上 %>
+          <td><%= number_to_currency(sale.sales_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_sales_of_usedcar += nil_to_zero(sale.sales_of_usedcar) %>
+              <% chart_sales_of_usedcar.push(number_with_precision(nil_to_zero(sale.sales_of_usedcar), precision:0)) %>
+	      <%# 中古車粗利 %>
+          <td><%= number_to_currency(sale.profit_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_profit_of_usedcar += nil_to_zero(sale.profit_of_usedcar) %>
+              <% chart_profit_of_usedcar.push(number_with_precision(nil_to_zero(sale.profit_of_usedcar), precision:0)) %>
+	      <%# 中古車利益率 %>
+          <td class="auto-calc"><%= number_to_percentage(profit_per(nil_to_zero(sale.profit_of_usedcar), nil_to_zero(sale.sales_of_usedcar)), precision:1) %></td>
+              <% chart_percentage_profit_of_usedcar.push(number_with_precision(profit_per(nil_to_zero(sale.profit_of_usedcar), nil_to_zero(sale.sales_of_usedcar)), precision:1)) %>
+	      <%# サービス台数 %>
+          <td><%= number_with_precision(sale.number_of_service, precision:0) %></td>
+	          <% total_number_of_service += nil_to_zero(sale.number_of_service) %>
+              <% chart_number_of_service.push(number_with_precision(nil_to_zero(sale.number_of_service), precision:0)) %>
+	      <%# サービス売上 %>
+          <td><%= number_to_currency(sale.sales_of_service, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_sales_of_service += nil_to_zero(sale.sales_of_service) %>
+              <% chart_sales_of_service.push(number_with_precision(nil_to_zero(sale.sales_of_service), precision:0)) %>
+	      <%# サービス粗利 %>
+          <td><%= number_to_currency(sale.profit_of_service, :unit => "￥", :format => "%u%n") %></td>
+	          <% total_profit_of_service += nil_to_zero(sale.profit_of_service) %>
+              <% chart_profit_of_service.push(number_with_precision(nil_to_zero(sale.profit_of_service), precision:0)) %>
+	      <%# サービス利益率 %>
+          <td class="auto-calc"><%= number_to_percentage(profit_per(nil_to_zero(sale.profit_of_service), nil_to_zero(sale.sales_of_service)), precision:1) %></td>
+              <% chart_percentage_profit_of_service.push(number_with_precision(profit_per(nil_to_zero(sale.profit_of_service), nil_to_zero(sale.sales_of_service)), precision:1)) %>
+	      <%# 総売上 %>
+              <% all_sales = nil_to_zero(sale.sales_of_newcar) + nil_to_zero(sale.sales_of_usedcar) + nil_to_zero(sale.sales_of_service) %></td>
+          <td class="auto-calc"><%= number_to_currency(unit_thousand(all_sales), :unit => "￥", :format => "%u%n") %></td>
+	          <% total_all_sales += nil_to_zero(all_sales) %>
+              <% chart_sales_of_all.push(unit_thousand(all_sales)) %>
+	      <%# 総粗利 %>
+              <% all_profit = nil_to_zero(sale.profit_of_newcar) + nil_to_zero(sale.profit_of_usedcar) + nil_to_zero(sale.profit_of_service) %></td>
+          <td class="auto-calc"><%= number_to_currency(unit_thousand(all_profit), :unit => "￥", :format => "%u%n")%></td>
+	          <% total_all_profit += nil_to_zero(all_profit) %>
+              <% chart_profit_of_all.push(unit_thousand(all_profit)) %>
+	      <%# 総利益率 %>
+          <td class="auto-calc"><%= number_to_percentage(profit_per(nil_to_zero(all_profit), nil_to_zero(all_sales)), precision:1) %></td>
+          <% chart_percentage_profit_of_all.push(number_with_precision(profit_per(nil_to_zero(all_profit), nil_to_zero(all_sales)), precision:1)) %>
+	    </tr>
+    <% end %>
+
+    <%# 合計行%>
+    <tr>
+    <%# 合計行%>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_customer) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_negotiations) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_assessment) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_testdrive) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_newcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_balance) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_new) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_replace) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_add) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_introduce) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_progress_newcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_newcar, total_progress_newcar.abs), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_credit) %>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_newcar, total_newcar_credit), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_credit_re) %>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_newcar_credit, total_newcar_credit_re), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_possible) %>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_plan) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_registration_possible, total_registration_plan), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_result) %>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_registration_plan, total_registration_result), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_balance) %>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_usedcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_usedcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_progress_usedcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_usedcar, total_usedcar), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_onemonth) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_onemonth) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_sixmonth) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_sixmonth) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_years) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_years) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_years_not) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_all_years) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_years, total_years + total_years_not), precision:1) %></td>
+	  <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_inspection) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_inspection) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_inspection_not) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_all_inspection) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_inspection, total_inspection + total_inspection_not), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_insurance_new) %></td>
+	  <td class="auto-calc" id="border-sum"><%= unit_ken(total_pl_insurance) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_insurance_renew) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_down_insurance) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_insurance, total_insurance_renew), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_ken(total_insurance_cancel) %></td>
+
+    <%# 粗利 %>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_number_of_newcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_sales_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_profit_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(profit_per(total_profit_of_newcar, total_sales_of_newcar), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_number_of_usedcar) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_sales_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_profit_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(profit_per(total_profit_of_usedcar, total_sales_of_usedcar), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_number_of_service) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_sales_of_service, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(total_profit_of_service, :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(profit_per(total_profit_of_service, total_sales_of_service), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(unit_thousand(total_all_sales), :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_currency(unit_thousand(total_all_profit), :unit => "￥", :format => "%u%n") %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(profit_per(total_all_profit, total_all_sales), precision:1) %></td>
+    </tr>
+
+  </tbody>
+</table>
+
+</div>
+</div>
+
+</td></tr></table>
+
+    <%# グラフ値 %>
+      <%# 期間 %>
+      <% if @sale_ym_from.blank? %>
+      <% subtitle_ym_from = '0000/00'%>
+      <% else %>
+      <% subtitle_ym_from = yyyymm_slash(@sale_ym_from) %>
+      <% end %>
+      <% if @sale_ym_to.blank? %>
+      <% subtitle_ym_to = '9999/99'%>
+      <% else %>
+      <% subtitle_ym_to = yyyymm_slash(@sale_ym_to) %>
+      <% end %>
+      <% subtitle = subtitle_ym_from + '～' + subtitle_ym_to %>
+      <%= hidden_field_tag(:subtitle, subtitle) %>
+
+      <%# 社員 %>
+      <% xaxis = chart_user_name.join(",") %>
+      <%= hidden_field_tag(:xaxis, xaxis ,{ :class => "input-mini" } ) %>
+
+      <%# 商談 %>
+      <% fseries1 = chart_negotiations.join(",") %>
+      <%= hidden_field_tag(:fseries1, fseries1 ,{ :class => "input-mini" } ) %>
+      <%# 査定 %>
+      <% fseries2 = chart_assessment.join(",") %>
+      <%= hidden_field_tag(:fseries2, fseries2 ,{ :class => "input-mini" } ) %>
+      <%# 試乗 %>
+      <% fseries3 = chart_testdrive.join(",") %>
+      <%= hidden_field_tag(:fseries3, fseries3 ,{ :class => "input-mini" } ) %>
+
+      <%# 新車 %>
+      <% fseries_pl_newcar = chart_pl_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_newcar, fseries_pl_newcar ,{ :class => "input-mini" } ) %>
+      <% fseries_newcar = chart_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_newcar, fseries_newcar ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_newcar = chart_percentage_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_newcar, fseries_percentage_newcar ,{ :class => "input-mini" } ) %>
+      <% fseries_registration = chart_registration_result.join(",") %>
+      <%= hidden_field_tag(:fseries_registration, fseries_registration ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_registration = chart_percentage_registration.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_registration, fseries_percentage_registration ,{ :class => "input-mini" } ) %>
+
+      <%# 中古車 %>
+      <% fseries_pl_usedcar = chart_pl_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_usedcar, fseries_pl_usedcar ,{ :class => "input-mini" } ) %>
+      <% fseries_usedcar = chart_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_usedcar, fseries_usedcar ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_usedcar = chart_percentage_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_usedcar, fseries_percentage_usedcar ,{ :class => "input-mini" } ) %>
+
+      <%# 初回1ヶ月点検 %>
+      <% fseries_pl_onemonth = chart_pl_onemonth.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_onemonth, fseries_pl_onemonth ,{ :class => "input-mini" } ) %>
+      <% fseries_onemonth = chart_onemonth.join(",") %>
+      <%= hidden_field_tag(:fseries_onemonth, fseries_onemonth ,{ :class => "input-mini" } ) %>
+      <%# 初回6ヶ月点検 %>
+      <% fseries_pl_sixmonth = chart_pl_sixmonth.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_sixmonth, fseries_pl_sixmonth ,{ :class => "input-mini" } ) %>
+      <% fseries_sixmonth = chart_sixmonth.join(",") %>
+      <%= hidden_field_tag(:fseries_sixmonth, fseries_sixmonth ,{ :class => "input-mini" } ) %>
+      <%# 12ヶ月・24ヶ月点検 %>
+      <% fseries_pl_years = chart_pl_years.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_years, fseries_pl_years ,{ :class => "input-mini" } ) %>
+      <% fseries_years = chart_years.join(",") %>
+      <%= hidden_field_tag(:fseries_years, fseries_years ,{ :class => "input-mini" } ) %>
+      <% fseries_years_not = chart_years_not.join(",") %>
+      <%= hidden_field_tag(:fseries_years_not, fseries_years_not ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_all_years = chart_percentage_all_years.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_all_years, fseries_percentage_all_years ,{ :class => "input-mini" } ) %>
+      <%# 車検 %>
+      <% fseries_pl_inspection = chart_pl_inspection.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_inspection, fseries_pl_inspection ,{ :class => "input-mini" } ) %>
+      <% fseries_inspection = chart_inspection.join(",") %>
+      <%= hidden_field_tag(:fseries_inspection, fseries_inspection ,{ :class => "input-mini" } ) %>
+      <% fseries_inspection_not = chart_inspection_not.join(",") %>
+      <%= hidden_field_tag(:fseries_inspection_not, fseries_inspection_not ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_all_inspection = chart_percentage_all_inspection.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_all_inspection, fseries_percentage_all_inspection ,{ :class => "input-mini" } ) %>
+      <%# 任意保険 %>
+      <% fseries_insurance_new = chart_insurance_new.join(",") %>
+      <%= hidden_field_tag(:fseries_insurance_new, fseries_insurance_new ,{ :class => "input-mini" } ) %>
+      <% fseries_pl_insurance = chart_pl_insurance.join(",") %>
+      <%= hidden_field_tag(:fseries_pl_insurance, fseries_pl_insurance ,{ :class => "input-mini" } ) %>
+      <% fseries_insurance_renew = chart_insurance_renew.join(",") %>
+      <%= hidden_field_tag(:fseries_insurance_renew, fseries_insurance_renew ,{ :class => "input-mini" } ) %>
+      <% fseries_percentage_insurance_renew = chart_percentage_insurance_renew.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_insurance_renew, fseries_percentage_insurance_renew ,{ :class => "input-mini" } ) %>
+      <%# 新車台数 %>
+      <% fseries_number_of_newcar = chart_number_of_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_number_of_newcar, fseries_number_of_newcar ,{ :class => "input-mini" } ) %>
+      <%# 新車売上額 %>
+      <% fseries_sales_of_newcar = chart_sales_of_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_sales_of_newcar, fseries_sales_of_newcar ,{ :class => "input-mini" } ) %>
+      <%# 新車粗利 %>
+      <% fseries_profit_of_newcar = chart_profit_of_newcar.join(",") %>
+      <%= hidden_field_tag(:fseries_profit_of_newcar, fseries_profit_of_newcar ,{ :class => "input-mini" } ) %>
+      <%# 中古車台数 %>
+      <% fseries_number_of_usedcar = chart_number_of_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_number_of_usedcar, fseries_number_of_usedcar ,{ :class => "input-mini" } ) %>
+      <%# 中古車金額 %>
+      <% fseries_sales_of_usedcar = chart_sales_of_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_sales_of_usedcar, fseries_sales_of_usedcar ,{ :class => "input-mini" } ) %>
+      <%# 中古車粗利 %>
+      <% fseries_profit_of_usedcar = chart_profit_of_usedcar.join(",") %>
+      <%= hidden_field_tag(:fseries_profit_of_usedcar, fseries_profit_of_usedcar ,{ :class => "input-mini" } ) %>
+      <%# サービス台数 %>
+      <% fseries_number_of_service = chart_number_of_service.join(",") %>
+      <%= hidden_field_tag(:fseries_number_of_service, fseries_number_of_service ,{ :class => "input-mini" } ) %>
+      <%# サービス売上額 %>
+      <% fseries_sales_of_service = chart_sales_of_service.join(",") %>
+      <%= hidden_field_tag(:fseries_sales_of_service, fseries_sales_of_service ,{ :class => "input-mini" } ) %>
+      <%# サービス粗利 %>
+      <% fseries_profit_of_service = chart_profit_of_service.join(",") %>
+      <%= hidden_field_tag(:fseries_profit_of_service, fseries_profit_of_service ,{ :class => "input-mini" } ) %>
+
+      <%# 総売上 %>
+      <% fseries_sales_of_all = chart_sales_of_all.join(",") %>
+      <%= hidden_field_tag(:fseries_sales_of_all, fseries_sales_of_all ,{ :class => "input-mini" } ) %>
+      <%# 総粗利 %>
+      <% fseries_profit_of_all = chart_profit_of_all.join(",") %>
+      <%= hidden_field_tag(:fseries_profit_of_all, fseries_profit_of_all ,{ :class => "input-mini" } ) %>
+      <%# 総利益率 %>
+      <% fseries_percentage_profit_of_all = chart_percentage_profit_of_all.join(",") %>
+      <%= hidden_field_tag(:fseries_percentage_profit_of_all, fseries_percentage_profit_of_all ,{ :class => "input-mini" } ) %>
+
+<% end %>
+
+<% if false %>
+<%= debug @sales %>
+<% end %>
