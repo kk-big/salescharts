@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  profit_ym: MyString
+  number_of_newcar: 1
+  sales_of_newcar: 1
+  profit_of_newcar: 1
+  number_of_usedcar: 1
+  sales_of_usedcar: 1
+  profit_of_usedcar: 1
+  number_of_service: 1
+  sales_of_service: 1
+  profit_of_service: 1
+
+two:
+  user_id: MyString
+  profit_ym: MyString
+  number_of_newcar: 1
+  sales_of_newcar: 1
+  profit_of_newcar: 1
+  number_of_usedcar: 1
+  sales_of_usedcar: 1
+  profit_of_usedcar: 1
+  number_of_service: 1
+  sales_of_service: 1
+  profit_of_service: 1

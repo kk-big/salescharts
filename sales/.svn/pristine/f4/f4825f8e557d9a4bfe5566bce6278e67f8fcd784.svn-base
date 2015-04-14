@@ -1,0 +1,83 @@
+<p id="notice"><%= notice %></p>
+
+<%= javascript_tag do %>
+  var data = {'data-date-format': 'YYYYMM' };
+  $(function(){
+    $('.datepicker').attr(data);
+    $('.datepicker').datetimepicker();
+  });
+<% end %>
+
+<h4>粗利一覧</h4>
+
+<table id="list_head">
+<tr><td>
+<!-- 検索フォーム -->
+<div id="search_form_box">
+<%= form_tag(profits_path, method: :get, id: :search_form) do %>
+  <div class="field calender">
+    <%= label_tag(:profit_ym, "基準年月", { :class => "search-label" } ) %>
+    <%= text_field_tag(:profit_ym_from, @profit_ym_from ,{ :class => "input-mini datepicker" } ) %>
+    ～
+    <%= text_field_tag(:profit_ym_to, @profit_ym_to ,{ :class => "input-mini datepicker" } ) %>
+    <%= label_tag(:user_id, "　社員", { :class => "search-label" } ) %>
+    <%= collection_select(:profit, :user_id, User.where(job: '1', delete_flag: '0').order('display_order asc','user_id asc'), :user_id, :user_name, {include_blank: true, :selected => @user_id}  ,{ :class => "input-large" }) %>
+    <%= button_tag(type: 'submit', class: "btn btn-default") do %>
+    <span class="glyphicon glyphicon-search"></span> 
+    <% end %>
+    <button class="btn btn-default" type="button" onclick="clearSearchForm()"><i class="glyphicon glyphicon-remove"></i></button>　
+  </div>
+<% end %>
+</div>
+
+</div>
+</td>
+<td id="btn-new">
+<%= link_to sanitize('<i class="glyphicon glyphicon-pencil"></i> ') + '新規登録', new_profit_path, class: "btn btn-danger" %>
+</td>
+</tr>
+</table>
+
+<table class="table table-condensed table-bordered table-hover table-striped profit-table">
+   <thead>
+    <tr>
+      <th rowspan="2">社員</th>
+      <th rowspan="2">基準年月</th>
+      <th colspan="3">新車</th>
+      <th colspan="3">中古車</th>
+      <th colspan="3">サービス</th>
+      <th colspan="2"  rowspan="2"></th>
+    </tr>
+    <tr>
+      <th>台数</th>
+      <th>売上額</th>
+      <th>粗利額</th>
+      <th>台数</th>
+      <th>売上額</th>
+      <th>粗利額</th>
+      <th>台数</th>
+      <th>売上額</th>
+      <th>粗利額</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @profits.each do |profit| %>
+      <tr>
+        <td id="align-left"><%= profit.user.user_name %></td>
+        <td id="align-center"><%= yyyymm_slash(profit.profit_ym) %></td>
+        <td><%= profit.number_of_newcar %></td>
+        <td><%= number_to_currency(profit.sales_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+        <td><%= number_to_currency(profit.profit_of_newcar, :unit => "￥", :format => "%u%n") %></td>
+        <td><%= profit.number_of_usedcar %></td>
+        <td><%= number_to_currency(profit.sales_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+        <td><%= number_to_currency(profit.profit_of_usedcar, :unit => "￥", :format => "%u%n") %></td>
+        <td><%= profit.number_of_service %></td>
+        <td><%= number_to_currency(profit.sales_of_service, :unit => "￥", :format => "%u%n") %></td>
+        <td><%= number_to_currency(profit.profit_of_service, :unit => "￥", :format => "%u%n") %></td>
+        <td id="align-center"><%= link_to '変更', edit_profit_path(profit) %></td>
+        <td id="align-center"><%= link_to '削除', profit, method: :delete, data: { confirm: '粗利を削除しますか？' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

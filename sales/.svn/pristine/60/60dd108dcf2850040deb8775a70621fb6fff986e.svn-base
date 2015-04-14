@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    models:
+        profit: '粗利'
+    attributes:
+      profit:
+        user_id: '社員'
+        profit_ym: '基準年月'
+        number_of_newcar: '新車売上台数'
+        sales_of_newcar: '新車売上金額'
+        profit_of_newcar: '新車粗利金額'
+        number_of_usedcar: '中古車売上台数'
+        sales_of_usedcar: '中古車売上金額'
+        profit_of_usedcar: '中古車粗利金額'
+        number_of_service: 'サービス入庫台数'
+        sales_of_service: 'サービス売上金額'
+        profit_of_service: 'サービス粗利金額'
+        created_at: 'データ作成日'
+        updated_at: 'データ更新日'

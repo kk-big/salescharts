@@ -1,0 +1,55 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  result_ym: MyString
+  result_date: MyString
+  negotiations: 1
+  assessment: 1
+  testdrive: 1
+  newcar_new: 1
+  newcar_replace: 1
+  newcar_add: 1
+  newcar_introduce: 1
+  newcar_cash: 1
+  newcar_credit: 1
+  newcar_credit_re: 1
+  registration_possible: 1
+  registration_result: 1
+  usedcar: 1
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  years_not: 1
+  inspection: 1
+  inspection_not: 1
+  insurance_new: 1
+  insurance_renew: 1
+  insurance_cancel: 1
+
+two:
+  user_id: MyString
+  result_ym: MyString
+  result_date: MyString
+  negotiations: 1
+  assessment: 1
+  testdrive: 1
+  newcar_new: 1
+  newcar_replace: 1
+  newcar_add: 1
+  newcar_introduce: 1
+  newcar_cash: 1
+  newcar_credit: 1
+  newcar_credit_re: 1
+  registration_possible: 1
+  registration_result: 1
+  usedcar: 1
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  years_not: 1
+  inspection: 1
+  inspection_not: 1
+  insurance_new: 1
+  insurance_renew: 1
+  insurance_cancel: 1

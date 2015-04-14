@@ -1,0 +1,511 @@
+/* 各ページのcontainer */
+#main {
+  margin-top:50px;
+  padding-right:0;
+  padding-left: 0;
+}
+
+#main-charts {
+  margin-top:80px;
+  padding-right:0;
+  padding-left: 0;
+}
+
+.navbar-inverse {
+  background-image: -moz-linear-gradient(top, #6691C6, #4F81BD);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6691C6), to(#4F81BD)); 
+  background-image: -webkit-linear-gradient(top, #6691C6, #4F81BD); 
+  background-image: -o-linear-gradient(top, #6691C6, #4F81BD);
+  background-image: linear-gradient(to bottom, #6691C6, #4F81BD);
+  background-repeat: repeat-x;
+  border-color: #4F81BD;
+  background-color: #4F81BD;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+color: #fff;
+background-color: #8DB0D7;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
+color: #fff;
+background-color: #8DB0D7;
+}
+
+.navbar .brand{
+    color:#FFFFFF;
+    font-weight: bold;
+}
+
+.navbar .nav > li > a{
+    color:#FFFFFF;
+}
+
+/* 各ページの見出し */
+h4{
+ font-weight: bold;
+ border-left: 5px solid #FF6600;
+ padding: 3px 0 3px 10px;
+}
+
+/* ボタンのパディング縮小 */
+.btn {
+  padding: 2px 10px;
+}
+
+/* テーブル */
+.table{
+  margin-top: 5px;
+}
+ 
+/* ログイン画面 */
+.form{
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+  height: 170px;
+  box-shadow: 1px 1px 1px 2px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  text-align: center;
+}
+p#title{
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+footer{
+  bottom:0;
+  position:absolute;
+  width:100%;
+  background-color:#666666;
+  color:#FFFFFF;
+  p{
+    text-align:center;
+	padding:5px;
+	margin:0;
+  }
+}
+
+/* ユーザー登録　入力フォームテーブルサイズ */
+.user_form_box {
+  width:410px;
+}
+
+/* ユーザー登録　ボタン位置 */
+#user_submit {
+  margin-top: 20px;
+  margin-left: 126px;
+}
+#btn-return{
+  margin-left: 20px;
+}
+.user-table tr> td{
+  text-align: center;
+}
+.user-table>thead>tr>th {
+  border: 1px solid #ddd;
+}
+
+/* 営業活動実績　 */
+table#chart-select{
+  margin-bottom: 6px;
+}
+/* 営業活動実績　検索フォーム */
+#search_form_box{
+  margin-top: 20px;
+  margin-left: 6px;
+ }
+#search_btn{
+  margin-bottom: 6px;
+ }
+p#graph-bar{
+  cursor: pointer;
+}
+p#graph-line{
+  cursor: pointer;
+}
+/* 外枠（列見出し） */
+div.x_data_area_rowtitle {
+  width: 165px;
+  overflow: hidden;
+  border-right: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+}
+/* 列見出し */
+div.x_scroll_box_rowtitle {
+  margin-top:-5px;
+  float: left;
+  width: 165px;
+  height: 710px;
+}
+
+/* 外枠 */
+div.x_data_area {
+  width: 1005px;
+  overflow: hidden;
+  border-right: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+  margin-left:-1px;
+}
+/* 横スクロール部分 */
+div.x_scroll_box {
+  margin-top:-5px;
+  float: left;
+  width: 1005px;
+  height: 710px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+/* table要素 */
+.search_result_index {
+  width: 2500px;
+  white-space: nowrap;
+}
+/* tbody要素 */
+.search_result_tbody{
+  overflow:auto; 
+}
+
+.search_result_tbody tr> td{
+  text-align:right;
+}
+
+#align-left{
+  text-align:left;
+}
+
+#align-right{
+  text-align:right;
+}
+
+.align-right{
+  text-align:right;
+}
+
+.table th{
+  background-color:#969696;
+  color:#FFFFFF;
+  border-right: 1px dotted rgba(0, 0, 0, .1); margin-right: 0px;
+  text-align:center;
+}
+
+#check{
+  height: 128px;
+  width:24px;
+}
+#no{
+  width:31px;
+}
+#name{
+  width:110px;
+}  
+#name_sum{
+  text-align:left;
+  border-top:2.5px double #DDDDDD;
+}  
+#negotiations{
+  height: 128px;
+}
+
+.auto-calc{
+  background:#ffffe0;
+}
+#border-sum{
+  border-top:2.5px double #DDDDDD;
+}
+
+/* 計画一覧　 */
+.plan-table tr> td{
+  text-align: right;
+}
+#align-center{
+  text-align:center;
+}
+.plan-table>thead>tr>th {
+  border: 1px solid #ddd;
+}
+
+/* 計画登録　入力フォームテーブルサイズ */
+.plan_form_box {
+  width:360px;
+}
+
+/* 計画登録 社員ラベル */
+#plan_user_id{
+  font-weight: normal;
+}
+
+/* 計画登録　ボタン位置 */
+#plan_submit {
+  margin-top: 20px;
+  margin-left: 166px;
+}
+
+/* 実績一覧　 */
+div.x_data_area_result_head {
+  width: 1170px;
+  overflow: hidden;
+  border-right: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+  margin-left:-1px;
+}
+/* 横スクロール部分 */
+div.x_scroll_box_result_head {
+  margin-top:-5px;
+  float: left;
+  width: 1170px;
+  height: 98px;
+}
+
+div.x_data_area_result {
+  width: 1170px;
+  overflow: hidden;
+  border-right: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+  margin-left:-1px;
+}
+
+/* 横スクロール部分 */
+div.x_scroll_box_result {
+  margin-top:-5px;
+  float: left;
+  width: 1170px;
+  height: 511px;
+  overflow-y: auto;
+}
+
+.result-table {
+  white-space: nowrap;
+}
+.result-table tr> td{
+  text-align: right;
+}
+
+.user_name{
+  width:110px;
+}
+.result_date{
+  width:85px;
+}
+.credit_char{
+  font-size:12px;
+  width:55px;
+}
+.width56{
+  width:56px;
+}
+
+/* 実績登録　入力フォームテーブルサイズ */
+.result_form_box {
+  width:370px;
+}
+.result_form_box_right {
+  width:370px;
+  margin-top:37px;
+  margin-left:40px;
+}
+
+/* 実績登録　ボタン位置 */
+#result_submit {
+  margin-top: 20px;
+  margin-left: 188px;
+}
+
+/* 車点検・保険一覧　 */
+.inspection-table tr> td{
+  text-align: right;
+}
+/* 車点検・保険登録　入力フォームテーブルサイズ */
+.inspection_form_box {
+  width:360px;
+}
+/* 車点検・保険登録　ボタン位置 */
+#inspection_submit {
+  margin-top: 20px;
+  margin-left: 177px;
+}
+.inspection-table>thead>tr>th {
+  border: 1px solid #ddd;
+}
+
+/* 粗利一覧　 */
+.profit-table tr> td{
+  text-align: right;
+}
+/* 粗利登録　入力フォームテーブルサイズ */
+.profit_form_box {
+  width:360px;
+}
+/* 粗利登録　ボタン位置 */
+#profit_submit {
+  margin-top: 20px;
+  margin-left: 159px;
+}
+.profit-table>thead>tr>th {
+  border: 1px solid #ddd;
+}
+
+/* テキストボックスのheight,margin-bottom変更 */
+.input-mini {
+  height: 27px;
+  width:80px;
+  padding: 1px 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.input-date {
+  height: 27px;
+  width:100px;
+  padding: 1px 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.input-small {
+  height: 27px;
+  padding: 3px 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.input-large {
+  height: 27px;
+  width: 150px;
+  padding: 3px 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+select.input-small {
+  height: 27px;
+  width: 80px;
+  line-height: 30px;
+  margin-bottom: 5px;
+}
+
+select.input-large {
+  height: 27px;
+  width: 150px;
+  line-height: 30px;
+  margin-bottom: 5px;
+}
+
+/* 各一覧画面　ヘッダー */
+table#list_head {
+  width: 100%;
+}
+td#btn-new{
+  text-align:right;
+  padding-top:24px;
+}
+
+/* 各画面　検索フォームのラベル */
+.search-label {
+    font-weight: normal;
+}
+
+/* 各画面　登録フォームのラベル */
+.form_label {
+    float: right;
+    padding-right: 15px;
+    margin-top: 2px;
+}
+.control-label {
+    font-weight: normal;
+}
+
+span.label{
+  margin-right:5px;
+}
+
+.float-right{
+  float: right;
+  padding-bottom:5px;
+}
+
+tr#separate-border{
+border-top: 1px solid #ddd;
+height: 5px;
+}
+
+/* グラフボタン */
+.btn#graph-bar {
+  margin-bottom: -13px;
+  margin-left: 20px;
+}
+.btn#graph-line {
+  margin-bottom: -13px;
+  margin-left: 20px;
+}
+
+/* グラフ閉じるボタン */
+#close-button {
+  float: right;
+  margin-right: 150px;
+}
+
+/* チェックボックスのラベル */
+label.checkbox {
+  font-weight: normal;
+  margin-left: 27px;
+}
+
+.calender{
+  position: relative;	
+}
+
+/* エラーメッセージ */
+.field_with_errors {
+  padding:0px;
+  border:0px solid red;
+  display: inline-block;
+}
+.field_with_errors > input, .field_with_errors > select{
+    border: 1px solid #DD0400;
+    color: #DD0400;
+}
+.field_with_errors > label{ color: #DD0400; }
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px;
+    margin-bottom: 0px;
+    background-color: #c00;
+    color: #fff;
+  }
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+.table>thead>tr>th {
+  vertical-align: bottom;
+  border-bottom: 0px solid #ddd;
+}
+

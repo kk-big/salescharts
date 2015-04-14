@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  inspection_ym: MyString
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  years_not: 1
+  inspection: 1
+  inspection_not: 1
+  insurance_new: 1
+  insurance_renew: 1
+  insurance_cancel: 1
+
+two:
+  user_id: MyString
+  inspection_ym: MyString
+  onemonth: 1
+  sixmonth: 1
+  years: 1
+  years_not: 1
+  inspection: 1
+  inspection_not: 1
+  insurance_new: 1
+  insurance_renew: 1
+  insurance_cancel: 1

@@ -47,16 +47,16 @@ class SalesController < ApplicationController
         sum(number_of_service) as number_of_service, sum(sales_of_service) as sales_of_service, sum(profit_of_service) as profit_of_service,
         sum(all_sales) as all_sales,
         sum(all_profit) as all_profit,
-        (case when sum(pl_newcar) <> 0 then (COALESCE(sum(newcar_new),0) + COALESCE(sum(newcar_replace),0) + COALESCE(sum(newcar_add),0) + COALESCE(sum(newcar_introduce),0)) / sum(pl_newcar) end ) as progress_newcar,
-        (case when sum(pl_registration_plan) <> 0 then COALESCE(sum(registration_result),0) / sum(pl_registration_plan) end) as progress_registration,
-        (case when sum(pl_usedcar) <> 0 then COALESCE(sum(usedcar),0) / sum(pl_usedcar) end) as progress_usedcar,
-        (case when sum(pl_years) <> 0 then (COALESCE(sum(years),0) + COALESCE(sum(years_not),0)) / sum(pl_years) end) as progress_years,
-        (case when sum(pl_inspection) <> 0 then (COALESCE(sum(inspection),0) + COALESCE(sum(inspection_not),0)) / sum(pl_inspection) end) as progress_inspection,
-        (case when sum(pl_insurance) <> 0 then COALESCE(sum(insurance_renew),0) / sum(pl_insurance) end) as progress_insurance_renew,
-        (case when sum(sales_of_newcar) <> 0 then COALESCE(sum(profit_of_newcar),0) / sum(sales_of_newcar) end) as per_profit_of_newcar,
-        (case when sum(sales_of_usedcar) <> 0 then COALESCE(sum(profit_of_usedcar),0) / sum(sales_of_usedcar) end) as per_profit_of_usedcar,
-        (case when sum(sales_of_service) <> 0 then COALESCE(sum(profit_of_service),0) / sum(sales_of_service) end) as per_profit_of_service,
-        (case when sum(all_sales) <> 0 then COALESCE(sum(all_profit),0) / sum(all_sales) end) as per_all_profit
+        (case when (sum(pl_newcar) <> 0 and sum(pl_newcar) notnull) then (COALESCE(sum(newcar_new),0) + COALESCE(sum(newcar_replace),0) + COALESCE(sum(newcar_add),0) + COALESCE(sum(newcar_introduce),0) + COALESCE(sum(wholesale),0)) / sum(pl_newcar) else 0 end ) as progress_newcar,
+        (case when (COALESCE(sum(pl_registration_plan),0) + COALESCE(sum(registration_plan_update),0) <> 0) then COALESCE(sum(registration_result),0) / (COALESCE(sum(pl_registration_plan),0) + COALESCE(sum(registration_plan_update),0)) else 0 end) as progress_registration,
+        (case when (sum(pl_usedcar) <> 0 and sum(pl_usedcar) notnull) then COALESCE(sum(usedcar),0) / sum(pl_usedcar) else 0 end) as progress_usedcar,
+        (case when (sum(pl_years) <> 0 and sum(pl_years) notnull) then (COALESCE(sum(years),0) + COALESCE(sum(years_not),0)) / sum(pl_years) else 0 end) as progress_years,
+        (case when (sum(pl_inspection) <> 0 and sum(pl_inspection) notnull) then (COALESCE(sum(inspection),0) + COALESCE(sum(inspection_not),0)) / sum(pl_inspection) else 0 end) as progress_inspection,
+        (case when (sum(pl_insurance) <> 0 and sum(pl_insurance) notnull) then COALESCE(sum(insurance_renew),0) / sum(pl_insurance) else 0 end) as progress_insurance_renew,
+        (case when (sum(sales_of_newcar) <> 0 and sum(sales_of_newcar) notnull) then COALESCE(sum(profit_of_newcar),0) / sum(sales_of_newcar) else 0 end) as per_profit_of_newcar,
+        (case when (sum(sales_of_usedcar) <> 0 and sum(sales_of_usedcar) notnull) then COALESCE(sum(profit_of_usedcar),0) / sum(sales_of_usedcar) else 0 end) as per_profit_of_usedcar,
+        (case when (sum(sales_of_service) <> 0 and sum(sales_of_service) notnull) then COALESCE(sum(profit_of_service),0) / sum(sales_of_service) else 0 end) as per_profit_of_service,
+        (case when (sum(all_sales) <> 0 and sum(all_sales) notnull) then COALESCE(sum(all_profit),0) / sum(all_sales) else 0 end) as per_all_profit
        from 
       (
       (((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.role, us.delete_flag, us.display_order,
@@ -77,8 +77,8 @@ class SalesController < ApplicationController
       (select user_id, profit_ym, sum(number_of_newcar) as number_of_newcar, sum(sales_of_newcar) as sales_of_newcar, sum(profit_of_newcar) as profit_of_newcar,
        sum(number_of_usedcar) as number_of_usedcar, sum(sales_of_usedcar) as sales_of_usedcar, sum(profit_of_usedcar) as profit_of_usedcar,
        sum(number_of_service) as number_of_service, sum(sales_of_service) as sales_of_service, sum(profit_of_service) as profit_of_service,
-       (sum(sales_of_newcar) + sum(sales_of_usedcar) + sum(sales_of_service)) as all_sales,
-       (sum(profit_of_newcar) + sum(profit_of_usedcar) + sum(profit_of_service)) as all_profit
+       (COALESCE(sum(sales_of_newcar),0) + COALESCE(sum(sales_of_usedcar),0) + COALESCE(sum(sales_of_service),0)) as all_sales,
+       (COALESCE(sum(profit_of_newcar),0) + COALESCE(sum(profit_of_usedcar),0) + COALESCE(sum(profit_of_service),0)) as all_profit
        from profits group by user_id , profit_ym) as pr
        on usplre.uid = pr.user_id and usplre.plan_ym = pr.profit_ym) as usplrepr
        full outer join 
@@ -89,10 +89,12 @@ class SalesController < ApplicationController
        from inspections group by user_id , inspection_ym) ins
        on usplrepr.uid = ins.user_id and usplrepr.plan_ym = ins.inspection_ym
        ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.display_order ' 
+    # 売上金額（千円）
     if params[:sortkey] == 'all_sales desc' 
-      strsql = strsql + 'order by all_sales desc, usplrepr.display_order, usplrepr.uid'
+      strsql = strsql + 'order by COALESCE(sum(all_sales),0) desc, usplrepr.display_order, usplrepr.uid'
+    # 粗利金額（千円）
     elsif params[:sortkey] == 'all_profit desc'
-      strsql = strsql + 'order by all_profit desc, usplrepr.display_order, usplrepr.uid'
+      strsql = strsql + 'order by COALESCE(sum(all_profit),0) desc, usplrepr.display_order, usplrepr.uid'
     # 新車 受注進度
     elsif params[:sortkey] == 'progress_newcar desc'
       strsql = strsql + 'order by progress_newcar desc, usplrepr.display_order, usplrepr.uid'

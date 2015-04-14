@@ -1,0 +1,136 @@
+<%= javascript_tag do %>
+var data = {'data-date-format': 'YYYYMM' };
+$(function(){
+  $('.datepicker').attr(data);
+  $('.datepicker').datetimepicker();
+});
+<% end %>
+
+<%= form_for(@inspection) do |f| %>
+  <% if @inspection.errors.any? %>
+    <div id="error_exinspectionation">
+      <h2><%= pluralize(@inspection.errors.count, "error") %> prohibited this inspection from being saved:</h2>
+
+      <ul>
+      <% @inspection.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+	  <table class="inspection_form_box">
+          <tr class="control-group">
+               <td class="form_label"><span class="label label-danger">必須</span><%= f.label :user_id, class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :user_id, User.where(job: '1', delete_flag: '0').order('display_order asc','user_id asc').map{|user| [user.user_name, user.user_id]} , {include_blank: true} ,{ :class => "input-large" } %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><span class="label label-danger">必須</span><%= f.label :inspection_ym, class: "control-label" %></td>
+               <td class="controls calender">
+                   <%= f.text_field :inspection_ym, class: "input-mini datepicker" %>
+               </td>
+          </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--初回1ヶ月点検 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :初回１ヶ月点検　　実施, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :onemonth, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--初回6ヶ月点検 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :初回６ヶ月点検　　実施, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :sixmonth, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--12点検・24点検 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :'12点検・24点検　　実施', class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :years, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :対象外実施, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :years_not, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--車検 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :車検　　　　　　　実施, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :inspection, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :対象外実施, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :inspection_not, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--任意保険 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :任意保険　　　　　新規, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :insurance_new, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :継続, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :insurance_renew, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :解約, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :insurance_cancel, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+	  </table>
+
+	  <div class="actions" id="inspection_submit">
+        <table>
+          <tr>
+            <td>
+              <%= f.submit "登録", data: { confirm: '更新してもよろしいですか？' }  , class: "btn btn-primary"%>　
+            </td>
+            <td>
+              <%= link_to '戻る', inspections_path, class: "btn btn-default", id: "btn-return" %>
+            </td>
+          </tr>
+        </table>
+	  </div>
+  </fieldset>
+
+<% end %>
