@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Honda Cars 松江 売上管理システム</title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+
+<!--[if lt IE 9]>
+<script src="/assets/html5shiv.min.js"></script>
+<script src="/assets/respond.min.js"></script>
+<![endif]-->
+
+  <%= csrf_meta_tags %>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <%= favicon_link_tag %>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" style="color: #FFFFFF">Honda Cars 松江　売上管理システム</a>
+      </div>
+    </div>
+  </div>
+  <div class="container" id="main">
+
+<%= yield %>
+  </div><!-- /.container -->
+
+</body>
+<footer>
+	<p>Copyright © Honda Cars Matsue Co.,Ltd. All rights reserved.</p>
+</footer>
+</html>

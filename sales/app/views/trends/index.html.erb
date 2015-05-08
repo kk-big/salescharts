@@ -508,8 +508,8 @@
             <% row_count += 1 %>
           <% end %>
           <% all_years = nil_to_zero(trend.years) + nil_to_zero(trend.years_not) %>
-	      <td><%= number_to_percentage(progress_per(trend.pl_years, all_years), precision:1) %></td>
-          <% chart_percentage_years[row_count] = number_with_precision(progress_per(trend.pl_years, all_years), precision:1) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %></td>
+          <% chart_percentage_years[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %>
       <% else %>
 	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
                   <% until trend.plan_ym == chart_yyyymm[row_count] do %>
@@ -518,8 +518,8 @@
             <% row_count += 1 %>
           <% end %>
           <% all_years = nil_to_zero(trend.years) + nil_to_zero(trend.years_not) %>
-	      <td><%= number_to_percentage(progress_per(trend.pl_years, all_years), precision:1) %></td>
-          <% chart_percentage_years[row_count] = number_with_precision(progress_per(trend.pl_years, all_years), precision:1) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %></td>
+          <% chart_percentage_years[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %>
       <% end %>
      <% before_name = trend.user_name %>
       <% row_count += 1 %>
@@ -586,8 +586,8 @@
             <% row_count += 1 %>
           <% end %>
           <% all_inspection = nil_to_zero(trend.inspection) + nil_to_zero(trend.inspection_not) %>
-	      <td><%= number_to_percentage(progress_per(trend.pl_inspection, all_inspection), precision:1) %></td>
-          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(trend.pl_inspection, all_inspection), precision:1) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %></td>
+          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %>
       <% else %>
 	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
                   <% until trend.plan_ym == chart_yyyymm[row_count] do %>
@@ -596,8 +596,8 @@
             <% row_count += 1 %>
           <% end %>
           <% all_inspection = nil_to_zero(trend.inspection) + nil_to_zero(trend.inspection_not) %>
-	      <td><%= number_to_percentage(progress_per(trend.pl_inspection, all_inspection), precision:1) %></td>
-          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(trend.pl_inspection, all_inspection), precision:1) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %></td>
+          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %>
       <% end %>
      <% before_name = trend.user_name %>
       <% row_count += 1 %>

@@ -336,7 +336,7 @@ $(function () {
       <th rowspan="3">実施</br>台数</th>
       <th rowspan="3">対象外</br>実施</th>
       <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="50%以上">総</br>実施</th>
-      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="50%以上">実施率</br>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="12点検・24点検" data-content="総実施／（対象台数＋対象外実施）　50%以上">実施率</br>
         <%= link_to sales_path(sortkey: 'progress_years desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
 
@@ -345,7 +345,7 @@ $(function () {
       <th rowspan="3">実施</br>台数</th>
       <th rowspan="3">対象外</br>実施</th>
       <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="70%以上">総</br>実施</th>
-      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="70%以上">実施率</br>
+      <th rowspan="3" data-container="body" data-toggle="popover" data-placement="top" title="車検" data-content="総実施／（対象台数＋対象外実施）　70%以上">実施率</br>
         <%= link_to sales_path(sortkey: 'progress_inspection desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
       
@@ -376,7 +376,7 @@ $(function () {
       <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／予定　100%必達">登録</br>進度
         <%= link_to sales_path(sortkey: 'progress_registration desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
-      <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="新車注残" data-content="前月注残＋受注合計">注残</th>
+      <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="新車注残" data-content="前月注残＋受注合計－登録済">注残</th>
 
     <%# 中古車 %>
 
@@ -534,7 +534,7 @@ $(function () {
           <td class="auto-calc"><%= number_to_percentage(progress_per(registration_plan_all, sale.registration_result), precision:1) %></td>
           <% chart_percentage_registration.push(number_with_precision(progress_per(registration_plan_all, sale.registration_result), precision:1)) %>
           <%# 注残 %>
-          <% newcar_balance = nil_to_zero(sale.newcar_balance) + all_newcar %>
+          <% newcar_balance = nil_to_zero(sale.newcar_balance) + all_newcar - nil_to_zero(sale.registration_result) %>
           <td class="auto-calc"><%= number_with_precision(newcar_balance, precision:0) %></td>
           <% total_balance += newcar_balance %>
 
@@ -595,19 +595,19 @@ $(function () {
               <% chart_years_not.push(number_with_precision(nil_to_zero(sale.years_not), precision:0)) %>
 	      <%# 総実施  %>
               <% all_years = nil_to_zero(sale.years) + nil_to_zero(sale.years_not) %>
-          <% if over50(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not))) %>
+          <% if over50(progress_per(nil_to_zero(sale.pl_years) + nil_to_zero(sale.years_not), all_years)) %>
             <td class="auto-calc"><%= number_with_precision(all_years, precision:0) %></td>
           <% else %>
             <td class="auto-calc" style="color:red"><%= number_with_precision(all_years, precision:0) %></td>
           <% end %>
               <% total_all_years += nil_to_zero(all_years) %>
 	      <%# 実施率  %>
-          <% if over50(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not))) %>
-            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1) %></td>
+          <% if over50(progress_per(nil_to_zero(sale.pl_years) + nil_to_zero(sale.years_not), all_years)) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(nil_to_zero(sale.pl_years) + nil_to_zero(sale.years_not), all_years), precision:1) %></td>
           <% else %>
-            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1) %></td>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(nil_to_zero(sale.pl_years) + nil_to_zero(sale.years_not), all_years), precision:1) %></td>
           <% end %>
-          <% chart_percentage_all_years.push(number_with_precision(progress_per(sale.pl_years, nil_to_zero(sale.years) + nil_to_zero(sale.years_not)), precision:1)) %>
+          <% chart_percentage_all_years.push(number_with_precision(progress_per(nil_to_zero(sale.pl_years) + nil_to_zero(sale.years_not), all_years), precision:1)) %>
 
 	    <%# 車検%>
 	      <%# 対象  %>
@@ -624,19 +624,19 @@ $(function () {
               <% chart_inspection_not.push(number_with_precision(nil_to_zero(sale.inspection_not), precision:0)) %>
 	      <%# 総実施  %>
               <% all_inspection = nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not) %>
-          <% if over70(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not))) %>
+          <% if over70(progress_per(nil_to_zero(sale.pl_inspection) + nil_to_zero(sale.inspection_not), all_inspection)) %>
             <td class="auto-calc"><%= number_with_precision(all_inspection, precision:0) %></td>
           <% else %>
             <td class="auto-calc" style="color:red"><%= number_with_precision(all_inspection, precision:0) %></td>
           <% end %>
               <% total_all_inspection += nil_to_zero(all_inspection) %>
 	      <%# 実施率  %>
-          <% if over70(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not))) %>
-            <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1) %></td>
+          <% if over70(progress_per(nil_to_zero(sale.pl_inspection) + nil_to_zero(sale.inspection_not), all_inspection)) %>
+            <td class="auto-calc"><%= number_to_percentage(progress_per(nil_to_zero(sale.pl_inspection) + nil_to_zero(sale.inspection_not), all_inspection), precision:1) %></td>
           <% else %>
-            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1) %></td>
+            <td class="auto-calc" style="color:red"><%= number_to_percentage(progress_per(nil_to_zero(sale.pl_inspection) + nil_to_zero(sale.inspection_not), all_inspection), precision:1) %></td>
           <% end %>
-              <% chart_percentage_all_inspection.push(number_with_precision(progress_per(sale.pl_inspection, nil_to_zero(sale.inspection) + nil_to_zero(sale.inspection_not)), precision:1)) %>
+              <% chart_percentage_all_inspection.push(number_with_precision(progress_per(nil_to_zero(sale.pl_inspection) + nil_to_zero(sale.inspection_not), all_inspection), precision:1)) %>
 
 	    <%# 任意保険 %>
 	      <%# 新規  %>
@@ -770,12 +770,12 @@ $(function () {
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_years) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_years_not) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_all_years) %></td>
-      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_years, total_years + total_years_not), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_years + total_years_not, total_all_years), precision:1) %></td>
 	  <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_inspection) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_inspection) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_inspection_not) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_all_inspection) %></td>
-      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_inspection, total_inspection + total_inspection_not), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_inspection + total_inspection_not, total_all_inspection), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_ken(total_insurance_new) %></td>
 	  <td class="auto-calc" id="border-sum"><%= unit_ken(total_pl_insurance) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_ken(total_insurance_renew) %></td>

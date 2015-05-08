@@ -1,0 +1,802 @@
+<% unless notice.blank? %>
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+<% end %>
+
+<%= javascript_tag do %>
+  var data = {'data-date-format': 'YYYYMM' };
+  $(function(){
+    $('.datepicker').attr(data);
+    $('.datepicker').datetimepicker();
+  });
+<% end %>
+
+<h4>営業活動推移</h4>
+<table id="chart-select">
+  <tr>
+    <td>
+    <!-- 検索フォーム -->
+      <div id="search_form_box">
+        <%= form_tag(trends_path, method: :get, id: :search_form ) do %>
+        <div class="field calender">
+          <%= label_tag(:trend_ym, "基準年月", { :class => "search-label" } ) %>
+          <%= text_field_tag(:trend_ym_from, @trend_ym_from ,{ :class => "input-mini datepicker" } ) %>
+                        ～
+          <%= text_field_tag(:trend_ym_to, @trend_ym_to ,{ :class => "input-mini datepicker"} ) %>
+          <%= button_tag(type: 'submit', class: "btn btn-default") do %>
+            <span class="glyphicon glyphicon-search"></span> 
+          <% end %>
+          <button class="btn btn-default" type="button" onclick="clearSearchForm()"><i class="glyphicon glyphicon-remove"></i></button> 
+        </div>
+        <% end %>
+      </div>			
+    </td>
+    <!-- グラフ選択  -->
+  <td>
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModa2" id="graph-line"><i class="fa fa-line-chart"></i>
+		グラフ
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">推移グラフ選択</h4>
+	      </div>
+	      <div class="modal-body">
+
+<%= form_tag(charts_path, method: :post, :target => "_blank") do %>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"customer", true %>
+			        【管理内台数】
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_newcar", false %>
+			         【新車】受注進度
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_registration", false %>
+			         【新車】登録進度
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_usedcar", false %>
+			         【中古車】受注進度
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_years", false %>
+			         【12点検・24点検】実施率
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_inspection", false %>
+			         【車検】実施率
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+                <%=radio_button_tag :radios_line,"percentage_insurance_renew", false %>
+			        【任意保険】継続率
+			  </label>
+			</div>
+	      </div>
+          <%= hidden_field_tag(:chart_cat, 'line' ,{ :class => "input-mini" } ) %>
+	      <div class="modal-footer">
+            <%= submit_tag("OK", { :class => "btn btn-primary" }) %>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+   </td>
+  </tr>
+</table>
+
+<!-- Tabs -->
+<div class="tabbable">
+ <ul class="nav nav-tabs">
+  <li class="active"><a href="#home" data-toggle="tab">管理内台数</a></li>
+  <li><a href="#tab1" data-toggle="tab">新車受注</a></li>
+  <li><a href="#tab2" data-toggle="tab">新車登録</a></li>
+  <li><a href="#tab3" data-toggle="tab">中古車</a></li>
+  <li><a href="#tab4" data-toggle="tab">12・24点検</a></li>
+  <li><a href="#tab5" data-toggle="tab">車検</a></li>
+  <li><a href="#tab6" data-toggle="tab">任意保険</a></li>
+ </ul>
+<div id="my-tab-content" class="tab-content">
+<div class="tab-pane active" id="home">
+<!-- 管理内台数 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_yyyymm = Array.new() %>
+    <% chart_user_name = Array.new() %>
+    <% chart_customer_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_customer" name="check" checked="checked"  onclick="check_all_customer()">
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 日付 %>
+      <% require 'date' %>
+      <%# 開始 %>
+      <% from_yyyy = @trend_ym_from[0,4] %>
+      <% from_mm = @trend_ym_from[4,2] %>
+      <% from_date = Date::new(from_yyyy.to_i, from_mm.to_i, 1) %>
+      <% from_date_wk = from_date %>
+      <%# 終了 %>
+      <% to_yyyy = @trend_ym_to[0,4] %>
+      <% to_mm = @trend_ym_to[4,2] %>
+      <% to_date = Date::new(to_yyyy.to_i, to_mm.to_i, 1) %>
+
+    <%# 新車 %>
+      <% array_length = 0 %>
+      <% while from_date <= to_date do %>
+        <th>
+        <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_customer = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_customer_all.push(chart_customer) %> 
+             <% chart_customer = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_customer', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 顧客数 %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_customer[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= trend.customer %></td>
+          <% chart_customer[row_count] = trend.customer %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_customer[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= trend.customer %></td>
+          <% chart_customer[row_count] = trend.customer %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+          <% chart_customer_all.push(chart_customer) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="tab-pane" id="tab1">
+<!-- 新車受注 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_yyyymm = Array.new() %>
+    <% chart_user_name = Array.new() %>
+    <% chart_percentage_newcar_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_newcar" name="check" checked="checked"  onclick="check_all_percentage_newcar()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 日付 %>
+      <% require 'date' %>
+      <%# 開始 %>
+      <% from_yyyy = @trend_ym_from[0,4] %>
+      <% from_mm = @trend_ym_from[4,2] %>
+      <% from_date = Date::new(from_yyyy.to_i, from_mm.to_i, 1) %>
+      <% from_date_wk = from_date %>
+      <%# 終了 %>
+      <% to_yyyy = @trend_ym_to[0,4] %>
+      <% to_mm = @trend_ym_to[4,2] %>
+      <% to_date = Date::new(to_yyyy.to_i, to_mm.to_i, 1) %>
+
+    <%# 新車 %>
+      <% array_length = 0 %>
+      <% while from_date <= to_date do %>
+        <th>
+        <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_newcar = Array.new(array_length, 0) %>
+
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_newcar_all.push(chart_percentage_newcar) %> 
+             <% chart_percentage_newcar = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_newcar', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_newcar[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% total_newcar = nil_to_zero(trend.newcar_new) + nil_to_zero(trend.newcar_replace) + nil_to_zero(trend.newcar_add) + nil_to_zero(trend.newcar_introduce) %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_newcar, total_newcar), precision:1) %></td>
+          <% chart_percentage_newcar[row_count] = number_with_precision(progress_per(trend.pl_newcar, total_newcar), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_newcar[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% total_newcar = nil_to_zero(trend.newcar_new) + nil_to_zero(trend.newcar_replace) + nil_to_zero(trend.newcar_add) + nil_to_zero(trend.newcar_introduce) %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_newcar, total_newcar), precision:1) %></td>
+          <% chart_percentage_newcar[row_count] = number_with_precision(progress_per(trend.pl_newcar, total_newcar), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+          <% chart_percentage_newcar_all.push(chart_percentage_newcar) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="tab-pane" id="tab2">
+<!-- 新車登録 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_percentage_registration_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_registration" name="check" checked="checked"  onclick="check_all_percentage_registration()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 新車 %>
+      <% array_length = 0 %>
+      <% from_date = from_date_wk %>
+      <% while from_date <= to_date do %>
+        <th>
+          <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_registration = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_registration_all.push(chart_percentage_registration) %> 
+             <% chart_percentage_registration = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_registration', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_registration[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% registration_plan_all = nil_to_zero(trend.registration_plan) + nil_to_zero(trend.registration_plan_update) %>
+	      <td><%= number_to_percentage(progress_per(registration_plan_all, trend.registration_result), precision:1) %></td>
+          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(registration_plan_all, trend.registration_result), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_registration[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% registration_plan_all = nil_to_zero(trend.registration_plan) + nil_to_zero(trend.registration_plan_update) %>
+	      <td><%= number_to_percentage(progress_per(registration_plan_all, trend.registration_result), precision:1) %></td>
+          <% chart_percentage_registration[row_count] = number_with_precision(progress_per(registration_plan_all, trend.registration_result), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+          <% chart_percentage_registration_all.push(chart_percentage_registration) %> 
+    <% end %>
+  </tbody>
+</table>
+
+</div>
+<div class="tab-pane" id="tab3">
+<!-- 中古車 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_percentage_usedcar_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_usedcar" name="check" checked="checked"  onclick="check_all_percentage_usedcar()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 中古車 %>
+      <% array_length = 0 %>
+      <% from_date = from_date_wk %>
+      <% while from_date <= to_date do %>
+        <th>
+          <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_usedcar = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_usedcar_all.push(chart_percentage_usedcar) %> 
+             <% chart_percentage_usedcar = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_usedcar', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_usedcar[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_usedcar, trend.usedcar), precision:1) %></td>
+          <% chart_percentage_usedcar[row_count] = number_with_precision(progress_per(trend.pl_usedcar, trend.usedcar), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_usedcar[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_usedcar, trend.usedcar), precision:1) %></td>
+          <% chart_percentage_usedcar[row_count] = number_with_precision(progress_per(trend.pl_usedcar, trend.usedcar), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+          <% chart_percentage_usedcar_all.push(chart_percentage_usedcar) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+ 
+<div class="tab-pane" id="tab4">
+<!-- 12点検・24点検 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_percentage_years_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_years" name="check" checked="checked"  onclick="check_all_percentage_years()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 12点検・24点検 %>
+      <% array_length = 0 %>
+      <% from_date = from_date_wk %>
+      <% while from_date <= to_date do %>
+        <th>
+          <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_years = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_years_all.push(chart_percentage_years) %> 
+             <% chart_percentage_years = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_years', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_years[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% all_years = nil_to_zero(trend.years) + nil_to_zero(trend.years_not) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %></td>
+          <% chart_percentage_years[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_years[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% all_years = nil_to_zero(trend.years) + nil_to_zero(trend.years_not) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %></td>
+          <% chart_percentage_years[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_years) + nil_to_zero(trend.years_not), all_years), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+      <% chart_percentage_years_all.push(chart_percentage_years) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="tab-pane" id="tab5">
+<!-- 車検 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_percentage_inspection_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_inspection" name="check" checked="checked"  onclick="check_all_percentage_inspection()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 車検 %>
+      <% array_length = 0 %>
+      <% from_date = from_date_wk %>
+      <% while from_date <= to_date do %>
+        <th>
+          <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_inspection = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_inspection_all.push(chart_percentage_inspection) %> 
+             <% chart_percentage_inspection = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_inspection', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_inspection[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% all_inspection = nil_to_zero(trend.inspection) + nil_to_zero(trend.inspection_not) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %></td>
+          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_inspection[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+          <% all_inspection = nil_to_zero(trend.inspection) + nil_to_zero(trend.inspection_not) %>
+	      <td><%= number_to_percentage(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %></td>
+          <% chart_percentage_inspection[row_count] = number_with_precision(progress_per(nil_to_zero(trend.pl_inspection) + nil_to_zero(trend.inspection_not), all_inspection), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+      <% chart_percentage_inspection_all.push(chart_percentage_inspection) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="tab-pane" id="tab6">
+<!-- 任意保険 -->
+<table class="table table-condensed table-bordered table-hover table-striped">
+  <thead>
+    <%# グラフ値 %>
+    <% chart_percentage_insurance_renew_all = Array.new() %>
+
+    <tr>
+      <th>
+        <INPUT type="checkbox" class="checkbox" id="all_list_percentage_insurance_renew" name="check" checked="checked"  onclick="check_all_percentage_insurance_renew()">      	
+      </th>
+      <th>No</th>
+      <th id="name">社員</th>
+
+    <%# 任意保険 %>
+      <% array_length = 0 %>
+      <% from_date = from_date_wk %>
+      <% while from_date <= to_date do %>
+        <th>
+          <%= yyyymm_slash(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        </th>
+        <% chart_yyyymm.push(from_date.year.to_s + sprintf("%02d", from_date.month).to_s) %>
+        <% from_date = from_date >> 1 %>
+       <% array_length += 1 %>
+      <% end %>
+      <% chart_percentage_insurance_renew = Array.new(array_length, 0) %>
+    </tr>
+  </thead>
+  <tbody class="search_result_tbody">
+    <% count = 0 %>
+    <% row_count = 0 %>
+    <% before_name = '' %>
+    <% @trends.each do |trend| %>
+     <% if trend.user_name != before_name %>
+        <% row_count = 0 %>
+       <% if count != 0 %>
+             <% chart_percentage_insurance_renew_all.push(chart_percentage_insurance_renew) %> 
+             <% chart_percentage_insurance_renew = Array.new(array_length , 0) %>
+           </tr>
+        <% end %>
+		<tr>
+	    <%# チェックボックス %>
+	      <td><%= check_box 'check_on_percentage_insurance_renew', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
+	      <%# No %>
+	      <td><%= count +=1 %></td>
+	    <%# 社員名 %>
+		  <td id="align-left"><%= trend.user_name %></td>
+	      <% chart_user_name.push(trend.user_name) %>
+	     <%# 計画進度％ %>
+                <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+	        <td></td>
+            <% chart_percentage_insurance_renew[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_insurance, trend.insurance_renew), precision:1) %></td>
+          <% chart_percentage_insurance_renew[row_count] = number_with_precision(progress_per(trend.pl_insurance, trend.insurance_renew), precision:1) %>
+      <% else %>
+	      <%# 計画進度％ 同じ社員の時、年月を横に展開 %>
+                  <% until trend.plan_ym == chart_yyyymm[row_count] do %>
+            <td></td>
+            <% chart_percentage_insurance_renew[row_count]=0 %>
+            <% row_count += 1 %>
+          <% end %>
+	      <td><%= number_to_percentage(progress_per(trend.pl_insurance, trend.insurance_renew), precision:1) %></td>
+          <% chart_percentage_insurance_renew[row_count] = number_with_precision(progress_per(trend.pl_insurance, trend.insurance_renew), precision:1) %>
+      <% end %>
+     <% before_name = trend.user_name %>
+      <% row_count += 1 %>
+    <% end %>
+    <% unless @trends.blank? %>
+          <% chart_percentage_insurance_renew_all.push(chart_percentage_insurance_renew) %> 
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<%# グラフ値 %>
+  <%# 期間 %>
+  <% if @trend_ym_from.blank? %>
+    <% subtitle_ym_from = '0000/00'%>
+  <% else %>
+    <% subtitle_ym_from = yyyymm_slash(@trend_ym_from) %>
+  <% end %>
+  <% if @trend_ym_to.blank? %>
+    <% subtitle_ym_to = '9999/99'%>
+  <% else %>
+    <% subtitle_ym_to = yyyymm_slash(@trend_ym_to) %>
+  <% end %>
+  <% subtitle = subtitle_ym_from + '～' + subtitle_ym_to %>
+  <%= hidden_field_tag(:subtitle, subtitle) %>
+
+  <%# 年月 %>
+  <% categories = chart_yyyymm.join(",") %>
+  <%= hidden_field_tag(:categories, categories ,{ :categories => "input-mini" } ) %>
+
+  <%# 社員 %>
+  <% xaxis = chart_user_name.join(",") %>
+  <%= hidden_field_tag(:xaxis, xaxis ,{ :class => "input-mini" } ) %>
+
+  <%# 管理内台数 %>
+  <% i = 0 %>
+  <% until i >= chart_customer_all.length do%>
+    <% if i == 0%>
+      <% fseries_customer_all = chart_customer_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_customer_all = fseries_customer_all + '#' + chart_customer_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_customer_all, fseries_customer_all ,{ :class => "input-mini" } ) %>
+
+  <%# 新車受注 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_newcar_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_newcar_all = chart_percentage_newcar_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_newcar_all = fseries_percentage_newcar_all + '#' + chart_percentage_newcar_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_newcar_all, fseries_percentage_newcar_all ,{ :class => "input-mini" } ) %>
+
+  <%# 新車登録 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_registration_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_registration_all = chart_percentage_registration_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_registration_all = fseries_percentage_registration_all + '#' + chart_percentage_registration_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_registration_all, fseries_percentage_registration_all ,{ :class => "input-mini" } ) %>
+
+  <%# 中古車登録 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_usedcar_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_usedcar_all = chart_percentage_usedcar_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_usedcar_all = fseries_percentage_usedcar_all + '#' + chart_percentage_usedcar_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_usedcar_all, fseries_percentage_usedcar_all ,{ :class => "input-mini" } ) %>
+
+  <%# 12点検・24点検 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_years_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_years_all = chart_percentage_years_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_years_all = fseries_percentage_years_all + '#' + chart_percentage_years_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_years_all, fseries_percentage_years_all ,{ :class => "input-mini" } ) %>
+
+  <%# 車検 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_inspection_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_inspection_all = chart_percentage_inspection_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_inspection_all = fseries_percentage_inspection_all + '#' + chart_percentage_inspection_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_inspection_all, fseries_percentage_inspection_all ,{ :class => "input-mini" } ) %>
+
+  <%# 任意保険 %>
+  <% i = 0 %>
+  <% until i >= chart_percentage_insurance_renew_all.length do%>
+    <% if i == 0%>
+      <% fseries_percentage_insurance_renew_all = chart_percentage_insurance_renew_all[i].join(",").to_s %>
+    <% else %>
+      <% fseries_percentage_insurance_renew_all = fseries_percentage_insurance_renew_all + '#' + chart_percentage_insurance_renew_all[i].join(",").to_s %>
+    <% end %>
+    <% i += 1 %>
+  <% end %>
+  <%= hidden_field_tag(:fseries_percentage_insurance_renew_all, fseries_percentage_insurance_renew_all ,{ :class => "input-mini" } ) %>
+
+<% end %>
+
+
+<% if false %>
+<%= debug @trends %>
+<% end %>
