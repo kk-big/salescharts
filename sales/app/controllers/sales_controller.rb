@@ -35,7 +35,7 @@ class SalesController < ApplicationController
     end
 
     strsql = 'select
-        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.display_order, sum(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
+        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
         sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
         sum(pl_newcar) as pl_newcar, sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce,
         sum(wholesale) as wholesale,
