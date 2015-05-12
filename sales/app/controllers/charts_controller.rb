@@ -423,7 +423,7 @@ class ChartsController < ApplicationController
         f.chart(:height => '560')
         end
 
-      # 【新車】受注計画進度推移
+      # 【新車】受注台数推移
       when 'percentage_newcar' then
       # 対象データ存在チェック
         if params[:check_on_percentage_newcar].nil? 
@@ -444,7 +444,7 @@ class ChartsController < ApplicationController
           xaxis.push(xaxis_all[no])
         end
         @chart = LazyHighCharts::HighChart.new('graph') do |f|
-        f.title(text: '新車 受注進度')
+        f.title(text: '新車 受注台数')
         f.subtitle(text: params[:subtitle])
         f.xAxis(:categories => categories)
         num = 0
@@ -452,12 +452,12 @@ class ChartsController < ApplicationController
           f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
           num += 1
         end
-        f.yAxis [{:title => {:text => "受注進度％", :margin => 5} },]
+        f.yAxis [{:title => {:text => "受注台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
         f.chart(:height => '560')
         end
 
-      # 【新車】登録計画進度推移
+      # 【新車】登録台数
       when 'percentage_registration' then
       # 対象データ存在チェック
         if params[:check_on_percentage_registration].nil? 
@@ -478,7 +478,7 @@ class ChartsController < ApplicationController
           xaxis.push(xaxis_all[no])
         end
         @chart = LazyHighCharts::HighChart.new('graph') do |f|
-        f.title(text: '新車 登録進度')
+        f.title(text: '新車 登録台数')
         f.subtitle(text: params[:subtitle])
         f.xAxis(:categories => categories)
         num = 0
@@ -486,12 +486,12 @@ class ChartsController < ApplicationController
           f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
           num += 1
         end
-        f.yAxis [{:title => {:text => "登録進度％", :margin => 5} },]
+        f.yAxis [{:title => {:text => "登録台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
         f.chart(:height => '560')
         end
 
-      # 【中古車】計画進度推移
+      # 【中古車】受注台数
       when 'percentage_usedcar' then
       # 対象データ存在チェック
         if params[:check_on_percentage_usedcar].nil? 
@@ -512,7 +512,7 @@ class ChartsController < ApplicationController
           xaxis.push(xaxis_all[no])
         end
         @chart = LazyHighCharts::HighChart.new('graph') do |f|
-        f.title(text: '中古車 受注進度')
+        f.title(text: '中古車 受注台数')
         f.subtitle(text: params[:subtitle])
         f.xAxis(:categories => categories)
         num = 0
@@ -520,7 +520,7 @@ class ChartsController < ApplicationController
           f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
           num += 1
         end
-        f.yAxis [{:title => {:text => "受注進度％", :margin => 5} },]
+        f.yAxis [{:title => {:text => "受注台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
         f.chart(:height => '560')
         end
@@ -593,7 +593,7 @@ class ChartsController < ApplicationController
         f.chart(:height => '560')
         end
 
-      # 【任意保険】継続率推移
+      # 【任意保険】新規件数
       when 'percentage_insurance_renew' then
       # 対象データ存在チェック
         if params[:check_on_percentage_insurance_renew].nil? 
@@ -614,7 +614,7 @@ class ChartsController < ApplicationController
           xaxis.push(xaxis_all[no])
         end
         @chart = LazyHighCharts::HighChart.new('graph') do |f|
-        f.title(text: '任意保険 継続率')
+        f.title(text: '任意保険 新規件数')
         f.subtitle(text: params[:subtitle])
         f.xAxis(:categories => categories)
         num = 0
@@ -622,7 +622,7 @@ class ChartsController < ApplicationController
           f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
           num += 1
         end
-        f.yAxis [{:title => {:text => "継続率％", :margin => 5} },]
+        f.yAxis [{:title => {:text => "新規件数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
         f.chart(:height => '560')
         end
