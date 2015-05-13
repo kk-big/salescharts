@@ -1,0 +1,66 @@
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+
+<p>
+  <strong>社員名:</strong>
+  <%= @user.user_name %>
+</p>
+
+<p>
+  <strong>ユーザーID:</strong>
+  <%= @user.user_id %>
+</p>
+
+<p>
+  <strong>パスワード:</strong>
+  <%= @user.user_password %>
+</p>
+
+<p>
+  <strong>担当コード:</strong>
+  <%= format("%03d", @user.emp_no) unless @user.emp_no.blank? %>
+</p>
+
+<p>
+  <strong>役職:</strong>
+　　<%case @user.position when '1' %><%='店長'%> 
+　　　　<%when '2' %><%='課長' %>
+　　　　<%when '3' %><%='係長' %>
+　　　　<%when '4' %><%='主任' %>
+　　　　<%else %><%='一般' %>
+　　<%end%>
+</p>
+
+<p>
+  <strong>職種:</strong>
+  <%case @user.job when '1' %><%='営業' %>
+　　　　<%when '2' %><%='その他' %>
+　　<%end%>
+</p>
+
+<p>
+  <strong>権限:</strong>
+　　<%case @user.role when '1' %><%='参照' %>
+　　　　<%when '2' %><%='更新' %>
+　　<%end%>
+</p>
+
+<p>
+  <strong>表示順:</strong>
+  <%= @user.display_order %>
+</p>
+
+<p>
+  <strong>アカウント状態:</strong>
+  <% if @user.delete_flag == '1' then %>
+    <%='無効' %>
+  <% else %>
+    <%='有効' %>
+  <% end %>
+</p>
+
+<%= link_to '変更', edit_user_path(@user) %> |
+<%= link_to '戻る', users_path %> |
+<%= link_to '新規', new_user_path %>

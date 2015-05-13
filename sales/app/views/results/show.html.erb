@@ -1,4 +1,7 @@
-<p id="notice"><%= notice %></p>
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
 
 <p>
   <strong>社員:</strong>
@@ -70,4 +73,6 @@
 </p>
 
 <%= link_to '変更', edit_result_path(@result) %> |
-<%= link_to '戻る', results_path %>
+<%= link_to '戻る', results_path %> |
+<%= link_to '新規', new_result_path %>
+

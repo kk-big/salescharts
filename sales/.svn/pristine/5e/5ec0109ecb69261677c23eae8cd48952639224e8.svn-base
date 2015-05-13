@@ -1,0 +1,54 @@
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+
+<p>
+  <strong>社員:</strong>
+  <%= @inspection.user.user_name %>
+</p>
+<p>
+  <strong>基準年月:</strong>
+  <%= yyyymm_slash(@inspection.inspection_ym) %>
+</p>
+<p>
+  <strong>初回1ヶ月点検実施台数:</strong>
+  <%= @inspection.onemonth %>
+</p>
+<p>
+  <strong>初回6ヶ月点検実施台数:</strong>
+  <%= @inspection.sixmonth %>
+</p>
+<p>
+  <strong>12点検・24点検実施台数:</strong>
+  <%= @inspection.years %>
+</p>
+<p>
+  <strong>12点検・24点検対象外実施台数:</strong>
+  <%= @inspection.years_not %>
+</p>
+<p>
+  <strong>車検実施台数:</strong>
+  <%= @inspection.inspection %>
+</p>
+<p>
+  <strong>車検対象外実施台数:</strong>
+  <%= @inspection.inspection_not %>
+</p>
+<p>
+  <strong>任意保険新規件数:</strong>
+  <%= @inspection.insurance_new %>
+</p>
+<p>
+  <strong>任意保険継続件数:</strong>
+  <%= @inspection.insurance_renew %>
+</p>
+<p>
+  <strong>任意保険解約件数:</strong>
+  <%= @inspection.insurance_cancel %>
+</p>
+
+<%= link_to '変更', edit_inspection_path(@inspection) %> |
+<%= link_to '戻る', inspections_path %> |
+<%= link_to '新規', new_inspection_path %>
+

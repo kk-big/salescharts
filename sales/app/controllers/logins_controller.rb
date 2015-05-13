@@ -17,7 +17,7 @@ class LoginsController < ApplicationController
       session[:role] = @user.first.try(:role)
       redirect_to sales_path
     else
-      @flash_now_alert = "もう一度入力してください。"
+      flash.now[:notice] = "もう一度入力してください。"
       render "new"
     end
   end
