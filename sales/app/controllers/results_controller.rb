@@ -22,8 +22,14 @@ class ResultsController < ApplicationController
     default_date_to = end_date.year.to_s + sprintf("%02d", end_date.month).to_s + sprintf("%02d", end_date.day).to_s 
 
     if params[:result_date_from].nil? 
-      result_date_from = default_date_from
-      @result_date_from = default_date_from
+      #販売活動登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        result_date_from = session[:cond_result_date_from]
+        @result_date_from = session[:cond_result_date_from]
+      else
+        result_date_from = default_date_from
+        @result_date_from = default_date_from
+      end
     elsif params[:result_date_from].empty?
       result_date_from = ''
       @result_date_from = ''
@@ -33,8 +39,14 @@ class ResultsController < ApplicationController
     end
 
     if params[:result_date_to].nil? 
-      result_date_to = default_date_to
-      @result_date_to = default_date_to
+      #販売活動登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        result_date_to = session[:cond_result_date_to]
+        @result_date_to = session[:cond_result_date_to]
+      else
+        result_date_to = default_date_to
+        @result_date_to = default_date_to
+      end
     elsif params[:result_date_to].blank? 
       result_date_to = ''
       @result_date_to = ''
@@ -44,8 +56,21 @@ class ResultsController < ApplicationController
     end
 
     if params[:result].blank? 
-      user_id = ''
-      @user_id = ''
+      #販売活動登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        params[:result] = session[:cond_result_user_id]
+        user_id = params[:result]
+        #条件設定がなかった時
+        if user_id.blank?
+          @user_id = ''
+        else
+          @user_id = params[:result][:user_id]
+        end
+        params[:result] = ''
+      else
+        user_id = ''
+        @user_id = ''
+      end
     else
       user_id = params[:result]
       @user_id = params[:result][:user_id]
@@ -53,6 +78,11 @@ class ResultsController < ApplicationController
 
 #    @results = Result.search(result_date_from, result_date_to, user_id)
     @results = Result.joins(:user).order('users.display_order').search(result_date_from, result_date_to, user_id)
+
+    #検索条件をセッションに格納して保持
+    session[:cond_result_date_from] = result_date_from
+    session[:cond_result_date_to] = result_date_to
+    session[:cond_result_user_id] = user_id
 
   end
 

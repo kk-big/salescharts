@@ -16,8 +16,14 @@ class InspectionsController < ApplicationController
     default_ym = d.year.to_s + sprintf("%02d", d.month).to_s 
 
     if params[:inspection_ym_from].nil? 
-      inspection_ym_from = default_ym
-      @inspection_ym_from = default_ym
+      #車点検・保険登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        inspection_ym_from = session[:cond_inspection_ym_from]
+        @inspection_ym_from = session[:cond_inspection_ym_from]
+      else
+        inspection_ym_from = default_ym
+        @inspection_ym_from = default_ym
+      end
     elsif params[:inspection_ym_from].empty?
       inspection_ym_from = ''
       @inspection_ym_from = ''
@@ -27,8 +33,14 @@ class InspectionsController < ApplicationController
     end
 
     if params[:inspection_ym_to].nil? 
-      inspection_ym_to = default_ym
-      @inspection_ym_to = default_ym
+      #車点検・保険登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        inspection_ym_to = session[:cond_inspection_ym_to]
+        @inspection_ym_to = session[:cond_inspection_ym_to]
+      else
+        inspection_ym_to = default_ym
+        @inspection_ym_to = default_ym
+      end
     elsif params[:inspection_ym_to].empty? 
       inspection_ym_to = ''
       @inspection_ym_to = ''
@@ -38,14 +50,32 @@ class InspectionsController < ApplicationController
     end
 
     if params[:inspection].blank? 
-      user_id = ''
-      @user_id = ''
+      #車点検・保険登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        params[:inspection] = session[:cond_inspection_user_id]
+        user_id = params[:inspection]
+        #条件設定がなかった時
+        if user_id.blank?
+          @user_id = ''
+        else
+          @user_id = params[:inspection][:user_id]
+        end
+        params[:inspection] = ''
+      else
+        user_id = ''
+        @user_id = ''
+      end
     else
       user_id = params[:inspection]
       @user_id = params[:inspection][:user_id]
     end
 
     @inspections = Inspection.joins(:user).order('users.display_order').search(inspection_ym_from, inspection_ym_to, user_id)
+
+    #検索条件をセッションに格納して保持
+    session[:cond_inspection_ym_from] = inspection_ym_from
+    session[:cond_inspection_ym_to] = inspection_ym_to
+    session[:cond_inspection_user_id] = user_id
 
   end
 

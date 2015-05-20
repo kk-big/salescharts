@@ -14,8 +14,14 @@ class PlansController < ApplicationController
     default_ym = d.year.to_s + sprintf("%02d", d.month).to_s 
 
     if params[:plan_ym_from].nil? 
-      plan_ym_from = default_ym
-      @plan_ym_from = default_ym
+      #計画登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        plan_ym_from = session[:cond_plan_ym_from]
+        @plan_ym_from = session[:cond_plan_ym_from]
+      else
+        plan_ym_from = default_ym
+        @plan_ym_from = default_ym
+      end
     elsif params[:plan_ym_from].empty?
       plan_ym_from = ''
       @plan_ym_from = ''
@@ -25,8 +31,14 @@ class PlansController < ApplicationController
     end
 
     if params[:plan_ym_to].nil? 
-      plan_ym_to = default_ym
-      @plan_ym_to = default_ym
+      #計画登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        plan_ym_to = session[:cond_plan_ym_to]
+        @plan_ym_to = session[:cond_plan_ym_to]
+      else
+        plan_ym_to = default_ym
+        @plan_ym_to = default_ym
+      end
     elsif params[:plan_ym_to].blank? 
       plan_ym_to = ''
       @plan_ym_to = ''
@@ -36,14 +48,33 @@ class PlansController < ApplicationController
     end
 
     if params[:plan].blank? 
-      user_id = ''
-      @user_id = ''
+      #計画登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        params[:plan] = session[:cond_plan_user_id]
+        user_id = params[:plan]
+        #条件設定がなかった時
+        if user_id.blank?
+          @user_id = ''
+        else
+          @user_id = params[:plan][:user_id]
+        end
+        params[:plan] = ''
+      else
+        user_id = ''
+        @user_id = ''
+      end
     else
       user_id = params[:plan]
       @user_id = params[:plan][:user_id]
     end
 #    @plans = Plan.search(plan_ym_from, plan_ym_to, user_id)
     @plans = Plan.joins(:user).order('users.display_order').search(plan_ym_from, plan_ym_to, user_id)
+
+    #検索条件をセッションに格納して保持
+    session[:cond_plan_ym_from] = plan_ym_from
+    session[:cond_plan_ym_to] = plan_ym_to
+    session[:cond_plan_user_id] = user_id
+
   end
 
   # GET /plans/1

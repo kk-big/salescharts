@@ -49,6 +49,6 @@
 </p>
 
 <%= link_to '変更', edit_inspection_path(@inspection) %> |
-<%= link_to '戻る', inspections_path %> |
+<%= link_to '戻る', inspections_path(:param_back => 'back') %> |
 <%= link_to '新規', new_inspection_path %>
 

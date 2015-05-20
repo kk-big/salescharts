@@ -14,8 +14,14 @@ class ProfitsController < ApplicationController
     default_ym = d.year.to_s + sprintf("%02d", d.month).to_s 
 
     if params[:profit_ym_from].nil? 
-      profit_ym_from = default_ym
-      @profit_ym_from = default_ym
+      #粗利登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        profit_ym_from = session[:cond_profit_ym_from]
+        @profit_ym_from = session[:cond_profit_ym_from]
+      else
+        profit_ym_from = default_ym
+        @profit_ym_from = default_ym
+      end
     elsif params[:profit_ym_from].empty?
       profit_ym_from = ''
       @profit_ym_from = ''
@@ -25,8 +31,14 @@ class ProfitsController < ApplicationController
     end
 
     if params[:profit_ym_to].nil? 
-      profit_ym_to = default_ym
-      @profit_ym_to = default_ym
+      #粗利登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        profit_ym_to = session[:cond_profit_ym_to]
+        @profit_ym_to = session[:cond_profit_ym_to]
+      else
+        profit_ym_to = default_ym
+        @profit_ym_to = default_ym
+      end
     elsif params[:profit_ym_to].empty? 
       profit_ym_to = ''
       @profit_ym_to = ''
@@ -36,8 +48,21 @@ class ProfitsController < ApplicationController
     end
 
     if params[:profit].blank? 
-      user_id = ''
-      @user_id = ''
+      #粗利登録・変更から遷移した時は、セッションに保持した検索条件をセット
+      if params[:param_back] == 'back'
+        params[:profit] = session[:cond_profit_user_id]
+        user_id = params[:profit]
+        #条件設定がなかった時
+        if user_id.blank?
+          @user_id = ''
+        else
+          @user_id = params[:profit][:user_id]
+        end
+        params[:profit] = ''
+      else
+        user_id = ''
+        @user_id = ''
+      end
     else
       user_id = params[:profit]
       @user_id = params[:profit][:user_id]
@@ -45,6 +70,11 @@ class ProfitsController < ApplicationController
 
 #    @profits = Profit.search(profit_ym_from, profit_ym_to, user_id)
     @profits = Profit.joins(:user).order('users.display_order').search(profit_ym_from, profit_ym_to, user_id)
+
+    #検索条件をセッションに格納して保持
+    session[:cond_profit_ym_from] = profit_ym_from
+    session[:cond_profit_ym_to] = profit_ym_to
+    session[:cond_profit_user_id] = user_id
 
   end
 

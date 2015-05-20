@@ -1,0 +1,190 @@
+<%= javascript_tag do %>
+var data = {'data-date-format': 'YYYYMMDD' };
+$(function(){
+  $('.datepicker').attr(data);
+  $('.datepicker').datetimepicker();
+});
+<% end %>
+
+<%= form_for(@result) do |f| %>
+  <% if @result.errors.any? %>
+    <div id="error_explanation">
+      <h5>データ保存時、<%= @result.errors.count %>個のエラーが発生しました。</h5>
+      <ul>
+      <% @result.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+	  <table class="result_form_box">
+<tr><td>
+	  <table class="result_form_box">
+	      <tr class="control-group">
+	           <td class="form_label"><span class="label label-danger">必須</span><%= f.label :user_id, class: "control-label" %></td>
+	           <td class="controls">
+                 <%= f.select :user_id, User.where(job: '1', delete_flag: '0').order('display_order asc','user_id asc').map{|user| [user.user_name, user.user_id]} , {include_blank: true} ,{ :class => "input-large" } %>
+	           </td>
+	      </tr>
+<!-- 基準年月はcontrollerでセット
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :基準年月, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :result_ym, class: "input-large" %>
+	           </td>
+	      </tr>
+ -->
+	      <tr class="control-group">
+	           <td class="form_label"><span class="label label-danger">必須</span><%= f.label :result_date, class: "control-label" %></td>
+	           <td class="controls calender">
+	               <%= f.text_field :result_date, class: "input-large datepicker" %>
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--3S -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :'３Ｓ　　　　　　　商談', class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :negotiations, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :査定,class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :assessment, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :試乗, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :testdrive, class: "input-large align-right" %>　件
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--新車受注 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :新車受注　　　　　新規, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_new, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :代替, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_replace, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :増車, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_add, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :紹介, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_introduce, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+<!--新車業販 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :新車業販, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :wholesale, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	  </table>
+	  </td>
+	  <td>
+	  <table class="result_form_box_right">
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--新車支払方法 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :新車支払方法　　　現金, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_cash, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :クレジット,class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_credit, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :うち残クレ, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :newcar_credit_re, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--新車登録 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :新車登録　　　　当月可, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :registration_possible, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :当月予定, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :registration_plan_update, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :当月実績, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :registration_result, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
+<!--中古車 -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :中古車　　　　直販受注, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :usedcar, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+	  </table>
+	  </td>
+	  </tr>
+	  </table>
+	
+	  <div class="actions" id="result_submit">
+        <table>
+          <tr>
+            <td>
+              <%= f.submit "登録", data: { confirm: '更新してもよろしいですか？' }  , class: "btn btn-primary"%>　
+            </td>
+            <td>
+              <%= link_to '戻る', results_path(:param_back => 'back'), class: "btn btn-default", id: "btn-return" %>
+            </td>
+          </tr>
+        </table>
+	  </div>
+
+  </fieldset>
+
+<% end %>

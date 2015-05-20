@@ -125,7 +125,7 @@ $(function(){
               <%= f.submit "登録", data: { confirm: '更新してもよろしいですか？' }  , class: "btn btn-primary"%>　
             </td>
             <td>
-              <%= link_to '戻る', inspections_path, class: "btn btn-default", id: "btn-return" %>
+              <%= link_to '戻る', inspections_path(:param_back => 'back'), class: "btn btn-default", id: "btn-return" %>
             </td>
           </tr>
         </table>
