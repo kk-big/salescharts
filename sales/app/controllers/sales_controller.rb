@@ -35,7 +35,7 @@ class SalesController < ApplicationController
     end
 
     strsql = 'select
-        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
+        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.emp_no, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
         sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
         sum(pl_newcar) as pl_newcar, sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce,
         sum(wholesale) as wholesale,
@@ -48,7 +48,7 @@ class SalesController < ApplicationController
         sum(all_sales) as all_sales,
         sum(all_profit) as all_profit,
         (case when (sum(pl_newcar) <> 0 and sum(pl_newcar) notnull) then (COALESCE(sum(newcar_new),0) + COALESCE(sum(newcar_replace),0) + COALESCE(sum(newcar_add),0) + COALESCE(sum(newcar_introduce),0) + COALESCE(sum(wholesale),0)) / sum(pl_newcar) else 0 end ) as progress_newcar,
-        (case when (COALESCE(sum(pl_registration_plan),0) + COALESCE(sum(registration_plan_update),0) <> 0) then COALESCE(sum(registration_result),0) / (COALESCE(sum(pl_registration_plan),0) + COALESCE(sum(registration_plan_update),0)) else 0 end) as progress_registration,
+        (case when (COALESCE(sum(pl_registration_plan),0) + COALESCE(sum(registration_plan_update),0) <> 0) then COALESCE(sum(registration_result),0) / sum(pl_newcar) else 0 end) as progress_registration,
         (case when (sum(pl_usedcar) <> 0 and sum(pl_usedcar) notnull) then COALESCE(sum(usedcar),0) / sum(pl_usedcar) else 0 end) as progress_usedcar,
         (case when (COALESCE(sum(pl_years),0) + COALESCE(sum(years_not),0) <> 0) then (COALESCE(sum(years),0) + COALESCE(sum(years_not),0)) / (COALESCE(sum(pl_years),0) + COALESCE(sum(years_not),0)) else 0 end) as progress_years,
         (case when (COALESCE(sum(pl_inspection),0)+ COALESCE(sum(inspection_not),0) <> 0) then (COALESCE(sum(inspection),0) + COALESCE(sum(inspection_not),0)) / (COALESCE(sum(pl_inspection),0) + COALESCE(sum(inspection_not),0)) else 0 end) as progress_inspection,
@@ -88,7 +88,7 @@ class SalesController < ApplicationController
        sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
        from inspections group by user_id , inspection_ym) ins
        on usplrepr.uid = ins.user_id and usplrepr.plan_ym = ins.inspection_ym
-       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.display_order ' 
+       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.emp_no, usplrepr.display_order ' 
     # 売上金額（千円）
     if params[:sortkey] == 'all_sales desc' 
       strsql = strsql + 'order by COALESCE(sum(all_sales),0) desc, usplrepr.display_order, usplrepr.uid'

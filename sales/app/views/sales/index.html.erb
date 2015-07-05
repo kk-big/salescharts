@@ -260,7 +260,7 @@ $(function () {
         <%# チェックボックス %>
           <td><%= check_box 'check_on', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
         <%# No %>
-          <td><%= count +=1 %></td>
+          <td><%= format("%03d", sale.emp_no) unless sale.emp_no.blank? %></td>
         <%# 社員名 %>
 	      <td id="align-left"><%= sale.user_name %></td>
            <% chart_user_name.push(sale.user_name) %>
@@ -373,7 +373,7 @@ $(function () {
       <th colspan="4">クレジット</th>
       <th colspan="3">当月</th>
       <th rowspan="2">登録済</th>
-      <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／予定　100%必達">登録</br>進度
+      <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／計画　100%必達">登録</br>進度
         <%= link_to sales_path(sortkey: 'progress_registration desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
       <th rowspan="2" data-container="body" data-toggle="popover" data-placement="top" title="新車注残" data-content="前月注残＋受注合計－登録済">注残</th>
@@ -531,8 +531,8 @@ $(function () {
           <% total_registration_result += nil_to_zero(sale.registration_result) %>
           <% chart_registration_result.push(number_with_precision(nil_to_zero(sale.registration_result), precision:0)) %>
           <%# 登録進度％ %>
-          <td class="auto-calc"><%= number_to_percentage(progress_per(registration_plan_all, sale.registration_result), precision:1) %></td>
-          <% chart_percentage_registration.push(number_with_precision(progress_per(registration_plan_all, sale.registration_result), precision:1)) %>
+          <td class="auto-calc"><%= number_to_percentage(progress_per(sale.pl_newcar, sale.registration_result), precision:1) %></td>
+          <% chart_percentage_registration.push(number_with_precision(progress_per(sale.pl_newcar, sale.registration_result), precision:1)) %>
           <%# 注残 %>
           <% newcar_balance = nil_to_zero(sale.newcar_balance) + all_newcar - nil_to_zero(sale.registration_result) %>
           <td class="auto-calc"><%= number_with_precision(newcar_balance, precision:0) %></td>
@@ -756,7 +756,7 @@ $(function () {
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_plan) %></td>
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(ng_per(total_registration_possible, total_registration_plan), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_result) %>
-      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_registration_plan, total_registration_result), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_pl_newcar, total_registration_result), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_balance) %>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_pl_usedcar) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_usedcar) %></td>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150409005135) do
+ActiveRecord::Schema.define(version: 20150705110329) do
 
   create_table "access_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20150409005135) do
     t.datetime "updated_at",               null: false
     t.integer  "wholesale"
     t.integer  "registration_plan_update"
+    t.integer  "inspection_pack"
   end
 
   add_index "results", ["result_date"], name: "index_results_on_result_date", using: :btree
@@ -130,6 +131,7 @@ ActiveRecord::Schema.define(version: 20150409005135) do
     t.string   "delete_flag"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "group"
   end
 
 end
