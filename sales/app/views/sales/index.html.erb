@@ -28,7 +28,7 @@ $(function () {
 <%= form_tag(sales_path, method: :get, id: :search_form ) do %>
   <div class="field calender">
     <%= label_tag(:sale_ym, "基準年月", { :class => "search-label" } ) %>
-    <%= text_field_tag(:sale_ym_from, @sale_ym_from ,{ :class => "input-mini datepicker" } ) %>
+    <%= text_field_tag(:sale_ym_from, @sale_ym_from ,{ :class => "input-mini datepicker"} ) %>
     ～
     <%= text_field_tag(:sale_ym_to, @sale_ym_to ,{ :class => "input-mini datepicker"} ) %>
     <%= button_tag(type: 'submit', class: "btn btn-default") do %>
@@ -172,6 +172,7 @@ $(function () {
     <% total_newcar = 0 %>
     <% total_newcar_credit = 0 %>
     <% total_newcar_credit_re = 0 %>
+    <% total_inspection_pack = 0 %>
     <% total_registration_possible = 0 %>
     <% total_registration_plan = 0 %>
     <% total_registration_result = 0 %>
@@ -288,7 +289,7 @@ $(function () {
       <th rowspan="4">試</br>乗</br>件</br>数</th>
 
     <%# 新車 %>
-      <th colspan="19" data-container="body" data-toggle="popover" data-placement="top" title="新車" data-content="計画台数必達">新車</th>
+      <th colspan="20" data-container="body" data-toggle="popover" data-placement="top" title="新車" data-content="計画台数必達">新車</th>
 
     <%# 中古車 %>
       <th colspan="4">中古車直販</th>
@@ -315,7 +316,7 @@ $(function () {
     <%# 新車 %>
       <th rowspan="3">計</br>画</th>
       <th rowspan="3">前</br>月</br>注</br>残</th>
-      <th colspan="11">受注</th>
+      <th colspan="12">受注</th>
       <th colspan="6">登録</th>
 
     <%# 中古車 %>
@@ -371,6 +372,7 @@ $(function () {
         <%= link_to sales_path(sortkey: 'progress_newcar desc', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to) do %><i class="glyphicon glyphicon-sort-by-order-alt"></i><% end %>
       </th>
       <th colspan="4">クレジット</th>
+      <th rowspan="2">点検</br>ﾊﾟｯｸ</th>
       <th colspan="3">当月</th>
       <th rowspan="2">登録済</th>
       <th rowspan="2" style="text-align: left;" data-container="body" data-toggle="popover" data-placement="top" title="新車登録進度" data-content="登録済／計画　100%必達">登録</br>進度
@@ -516,6 +518,9 @@ $(function () {
               <% total_newcar_credit_re += nil_to_zero(sale.newcar_credit_re) %>
           <%# 残クレ率 %>
           <td class="auto-calc"><%= number_to_percentage(progress_per(sale.newcar_credit, sale.newcar_credit_re), precision:1) %></td>
+          <%# 点検パック %>
+	      <td><%= number_with_precision(sale.inspection_pack, precision:0) %></td>
+              <% total_inspection_pack += nil_to_zero(sale.inspection_pack) %>
           <%# 登録可 %>
           <% registration_possible_all = nil_to_zero(sale.pl_registration_possible) + nil_to_zero(sale.registration_possible) %>
 	      <td><%= number_with_precision(registration_possible_all, precision:0) %></td>
@@ -752,6 +757,7 @@ $(function () {
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_newcar, total_newcar_credit), precision:1) %></td>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_newcar_credit_re) %>
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(progress_per(total_newcar_credit, total_newcar_credit_re), precision:1) %></td>
+      <td class="auto-calc" id="border-sum"><%= unit_dai(total_inspection_pack) %>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_possible) %>
       <td class="auto-calc" id="border-sum"><%= unit_dai(total_registration_plan) %></td>
       <td class="auto-calc" id="border-sum"><%= number_to_percentage(ng_per(total_registration_possible, total_registration_plan), precision:1) %></td>

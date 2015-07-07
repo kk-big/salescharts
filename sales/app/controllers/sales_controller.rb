@@ -35,11 +35,12 @@ class SalesController < ApplicationController
     end
 
     strsql = 'select
-        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.emp_no, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
+        usplrepr.uid as user_id, usplrepr.user_name, usplrepr.emp_no, usplrepr.group, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
         sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
         sum(pl_newcar) as pl_newcar, sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce,
         sum(wholesale) as wholesale,
         sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re,
+        sum(inspection_pack) as inspection_pack,
         sum(registration_possible) as registration_possible, sum(registration_plan_update) as registration_plan_update, sum(registration_result) as registration_result, sum(pl_usedcar) as pl_usedcar, sum(usedcar) as usedcar, sum(pl_onemonth) as pl_onemonth, sum(onemonth) as onemonth, sum(pl_sixmonth) as pl_sixmonth, sum(sixmonth) as sixmonth, sum(pl_years) as pl_years, sum(years) as years,
         sum(years_not) as years_not, sum(pl_inspection) as pl_inspection, sum(inspection) as inspection, sum(inspection_not) as inspection_not, sum(insurance_new) as insurance_new, sum(pl_insurance) as pl_insurance, sum(insurance_renew) as insurance_renew,
         sum(insurance_cancel) as insurance_cancel, sum(number_of_newcar) as number_of_newcar, sum(sales_of_newcar) as sales_of_newcar, sum(profit_of_newcar) as profit_of_newcar,
@@ -59,7 +60,7 @@ class SalesController < ApplicationController
         (case when (sum(all_sales) <> 0 and sum(all_sales) notnull) then COALESCE(sum(all_profit),0) / sum(all_sales) else 0 end) as per_all_profit
        from 
       (
-      (((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.role, us.delete_flag, us.display_order,
+      (((select us.user_id as uid, us.user_password, us.user_name, us.emp_no, us.position, us.job, us.group, us.role, us.delete_flag, us.display_order,
        pl.user_id, pl.plan_ym as plan_ym, pl.customer as pl_customer, pl.newcar as pl_newcar, pl.newcar_balance as pl_newcar_balance, pl.registration_possible as pl_registration_possible, pl.registration_plan as pl_registration_plan, pl.usedcar as pl_usedcar, pl.onemonth as pl_onemonth, pl.sixmonth as pl_sixmonth, pl.years as pl_years, 
        pl.inspection as pl_inspection, pl.insurance as pl_insurance
        from users us left join plans pl on us.user_id = pl.user_id) as uspl
@@ -69,6 +70,7 @@ class SalesController < ApplicationController
        sum(newcar_new) as newcar_new, sum(newcar_replace) as newcar_replace, sum(newcar_add) as newcar_add, sum(newcar_introduce) as newcar_introduce, 
        sum(wholesale) as wholesale,
        sum(newcar_credit) as newcar_credit, sum(newcar_credit_re) as newcar_credit_re, 
+        sum(inspection_pack) as inspection_pack,
        sum(registration_possible) as registration_possible, sum(registration_plan_update) as registration_plan_update, sum(registration_result) as registration_result,
        sum(usedcar) as usedcar
        from results group by user_id , result_ym) re
@@ -88,7 +90,7 @@ class SalesController < ApplicationController
        sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
        from inspections group by user_id , inspection_ym) ins
        on usplrepr.uid = ins.user_id and usplrepr.plan_ym = ins.inspection_ym
-       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.emp_no, usplrepr.display_order ' 
+       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.emp_no, usplrepr.group, usplrepr.display_order ' 
     # 売上金額（千円）
     if params[:sortkey] == 'all_sales desc' 
       strsql = strsql + 'order by COALESCE(sum(all_sales),0) desc, usplrepr.display_order, usplrepr.uid'
