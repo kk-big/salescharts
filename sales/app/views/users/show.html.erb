@@ -41,6 +41,11 @@
 </p>
 
 <p>
+  <strong>グループ:</strong>
+  <%= @user.group %>
+</p>
+
+<p>
   <strong>権限:</strong>
 　　<%case @user.role when '1' %><%='参照' %>
 　　　　<%when '2' %><%='更新' %>

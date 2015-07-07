@@ -45,6 +45,9 @@ class Result < ActiveRecord::Base
  # 新車受注残クレジット台数
    validates :newcar_credit_re,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
+ # 新車受注点検パック台数
+   validates :inspection_pack,
+    :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
  # 新車登録当月可台数
    validates :registration_possible,
     :numericality => {only_integer: true, greater_than_or_equal_to: 0, allow_blank: true}
@@ -98,6 +101,15 @@ class Result < ActiveRecord::Base
    def check_newcar_credit_re
      if nil_to_zero(newcar_credit) < nil_to_zero(newcar_credit_re)
        errors.add(:newcar_credit_re,"＜新車受注（クレジット）として下さい。")
+     end
+   end
+
+   # 点検パック台数
+   validate :check_inspection_pack
+   def check_inspection_pack
+     if (nil_to_zero(newcar_new) + nil_to_zero(newcar_replace) + nil_to_zero(newcar_add) + nil_to_zero(newcar_introduce) + nil_to_zero(wholesale)) <
+       nil_to_zero(inspection_pack)
+       errors.add(:inspection_pack,"＜新車受注台数として下さい。")
      end
    end
 

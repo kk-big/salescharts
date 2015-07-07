@@ -55,6 +55,12 @@
                </td>
           </tr>
 		　　<tr class="control-group">
+               <td class="form_label"><%= f.label :group,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :group, [["A", "A"], ["B", "B"]] ,{}, { :class => 'input-small' } %>
+               </td>
+          </tr>
+		　　<tr class="control-group">
                <td class="form_label"><%= f.label :role,class: "control-label" %></td>
                <td class="controls">
                    <%= f.select :role, [["参照", "1"], ["更新", "2"]] ,{}, { :class => 'input-small' } %>

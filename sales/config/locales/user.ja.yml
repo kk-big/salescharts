@@ -11,6 +11,7 @@ ja:
         emp_no: '担当コード'
         position: '役職'
         job: '職種'
+        group: 'グループ'
         role: '権限'
         display_order: '表示順'
         created_at: 'データ作成日'

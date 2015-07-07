@@ -136,6 +136,18 @@ $(function(){
                <td class="controls">
                </td>
           </tr>
+<!--新車点検パック -->
+	      <tr class="control-group">
+	           <td class="form_label"><%= f.label :新車　　　　点検パック, class: "control-label" %></td>
+	           <td class="controls">
+	               <%= f.text_field :inspection_pack, class: "input-large align-right" %>　台
+	           </td>
+	      </tr>
+          <tr class="control-group" id="separate-border">
+               <td class="form_label"></td>
+               <td class="controls">
+               </td>
+          </tr>
 <!--新車登録 -->
 	      <tr class="control-group">
 	           <td class="form_label"><%= f.label :新車登録　　　　当月可, class: "control-label" %></td>

@@ -18,6 +18,7 @@ ja:
         newcar_cash: '新車受注（現金）'
         newcar_credit: '新車受注（クレジット）'
         newcar_credit_re: '新車受注（残クレ）'
+        inspection_pack: '点検パック'
         registration_possible: '新車登録当月可'
         registration_plan_update: '新車登録当月予定'
         registration_result: '新車登録当月実績'

@@ -15,6 +15,7 @@
       <th>担当コード</th>
       <th>役職</th>
       <th>職種</th>
+      <th>グループ</th>
       <th>権限</th>
       <th>表示順</th>
       <th>アカウント状態</th>
@@ -50,6 +51,7 @@
               <%='その他' %>
 		   <%end%>
         </td>
+        <td><%= user.group %></td>
         <td><%case user.role
             when '1' %>
               <%='参照' %>
