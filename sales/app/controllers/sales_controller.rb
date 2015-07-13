@@ -34,6 +34,14 @@ class SalesController < ApplicationController
       @sale_ym_to = params[:sale_ym_to]
     end
 
+    if params[:group_btn].blank?
+      param_group = ''
+      @group = ''
+    else
+      param_group = params[:group_btn]
+      @group = params[:group_btn]
+    end
+
     strsql = 'select
         usplrepr.uid as user_id, usplrepr.user_name, usplrepr.emp_no, usplrepr.group, usplrepr.display_order, avg(pl_customer) as customer, sum(pl_newcar_balance) as newcar_balance, sum(pl_registration_possible) as pl_registration_possible, sum(pl_registration_plan) as registration_plan, 
         sum(negotiations) as negotiations, sum(assessment) as assessment, sum(testdrive) as testdrive,
@@ -90,7 +98,14 @@ class SalesController < ApplicationController
        sum(insurance_new) as insurance_new, sum(insurance_renew) as insurance_renew, sum(insurance_cancel) as insurance_cancel
        from inspections group by user_id , inspection_ym) ins
        on usplrepr.uid = ins.user_id and usplrepr.plan_ym = ins.inspection_ym
-       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? group by usplrepr.uid, usplrepr.user_name, usplrepr.emp_no, usplrepr.group, usplrepr.display_order ' 
+       ) where usplrepr.plan_ym >= ? and usplrepr.plan_ym <= ? '
+    # グループ
+    if params[:group_btn].blank?
+    else
+      strsql = strsql + 'and usplrepr.group = ? '
+    end
+    strsql = strsql + 'group by usplrepr.uid, usplrepr.user_name, usplrepr.emp_no, usplrepr.group, usplrepr.display_order ' 
+
     # 売上金額（千円）
     if params[:sortkey] == 'all_sales desc' 
       strsql = strsql + 'order by COALESCE(sum(all_sales),0) desc, usplrepr.display_order, usplrepr.uid'
@@ -130,7 +145,13 @@ class SalesController < ApplicationController
     else
       strsql = strsql + 'order by usplrepr.display_order, usplrepr.uid'
     end
-    @sales = Plan.find_by_sql([strsql, param_ym_from, param_ym_to])
+
+logger.debug(param_group)
+    if params[:group_btn].blank?
+      @sales = Plan.find_by_sql([strsql, param_ym_from, param_ym_to])
+    else
+      @sales = Plan.find_by_sql([strsql, param_ym_from, param_ym_to, param_group])
+    end
 
     # 粗利の最終更新日
     @profit_update_date = Profit.where('profit_ym >= ? and profit_ym <= ?' ,param_ym_from, param_ym_to).maximum(:updated_at) 

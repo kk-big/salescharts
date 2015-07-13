@@ -16,6 +16,13 @@ $(function () {
   $('[data-toggle="popover"]').popover()
 })
 
+$(function () {
+  $("#sale_ym_to").on("dp.change", function(){
+  	var data = $("#sale_ym_to").val();
+  	$("#sale_ym_from").val(data);
+  });
+});
+
 <% end %>
 
 <h4>営業活動実績</h4>
@@ -45,6 +52,8 @@ $(function () {
 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" id="graph-bar"><i class="fa fa-bar-chart"></i>
           グラフ
 	</button>
+    <%= link_to sanitize('<i class="fa fa-users"></i> ') + 'Aグループ', sales_path(:group_btn => 'A', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-primary", id:"a-group" %>
+    <%= link_to sanitize('<i class="fa fa-users"></i> ') + 'Bグループ', sales_path(:group_btn => 'B', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-danger", id:"b-group" %>
 	
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -262,6 +271,7 @@ $(function () {
           <td><%= check_box 'check_on', "no#{count}", {:checked => true,  :class => 'checkbox'}, true, false %></td>
         <%# No %>
           <td><%= format("%03d", sale.emp_no) unless sale.emp_no.blank? %></td>
+          <% count += 1 %>
         <%# 社員名 %>
 	      <td id="align-left"><%= sale.user_name %></td>
            <% chart_user_name.push(sale.user_name) %>

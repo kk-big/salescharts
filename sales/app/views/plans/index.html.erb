@@ -6,6 +6,14 @@ $(function(){
   $('.datepicker').attr(data);
   $('.datepicker').datetimepicker();
 });
+
+$(function () {
+  $("#plan_ym_to").on("dp.change", function(){
+    var data = $("#plan_ym_to").val();
+    $("#plan_ym_from").val(data);
+  });
+});
+
 <% end %>
 
 <h4>計画一覧</h4>

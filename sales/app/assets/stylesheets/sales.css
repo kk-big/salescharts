@@ -460,6 +460,15 @@ height: 5px;
   margin-right: 150px;
 }
 
+/* グループボタン */
+.btn#a-group {
+  margin-bottom: -13px;
+  margin-left: 20px;
+}
+.btn#b-group {
+  margin-bottom: -13px;
+}
+
 /* チェックボックスのラベル */
 label.checkbox {
   font-weight: normal;

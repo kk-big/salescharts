@@ -6,6 +6,14 @@ $(function(){
   $('.datepicker').attr(data);
   $('.datepicker').datetimepicker();
 });
+
+$(function () {
+  $("#inspection_ym_to").on("dp.change", function(){
+    var data = $("#inspection_ym_to").val();
+    $("#inspection_ym_from").val(data);
+  });
+});
+
 <% end %>
 
 <h4>車点検・保険一覧</h4>

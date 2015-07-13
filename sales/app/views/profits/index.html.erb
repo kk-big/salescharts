@@ -6,6 +6,14 @@
     $('.datepicker').attr(data);
     $('.datepicker').datetimepicker();
   });
+
+  $(function () {
+    $("#profit_ym_to").on("dp.change", function(){
+      var data = $("#profit_ym_to").val();
+      $("#profit_ym_from").val(data);
+    });
+  });
+
 <% end %>
 
 <h4>粗利一覧</h4>
