@@ -52,8 +52,16 @@ $(function () {
 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal" id="graph-bar"><i class="fa fa-bar-chart"></i>
           グラフ
 	</button>
-    <%= link_to sanitize('<i class="fa fa-users"></i> ') + 'Aグループ', sales_path(:group_btn => 'A', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-primary", id:"a-group" %>
-    <%= link_to sanitize('<i class="fa fa-users"></i> ') + 'Bグループ', sales_path(:group_btn => 'B', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-danger", id:"b-group" %>
+<%if @group.blank? %>
+    <%= link_to sanitize('<i class="fa fa-square-o"></i> ') + 'Aグループ', sales_path(:group_btn => 'A', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-primary", id:"a-group" %>
+    <%= link_to sanitize('<i class="fa fa-square-o"></i> ') + 'Bグループ', sales_path(:group_btn => 'B', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-danger", id:"b-group" %>
+<%elsif @group == 'A' %>
+    <%= link_to sanitize('<i class="fa fa-check-square-o"></i> ') + 'Aグループ', sales_path(:group_btn => '', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-primary", id:"a-group" %>
+    <%= link_to sanitize('<i class="fa fa-square-o"></i> ') + 'Bグループ', sales_path(:group_btn => 'B', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-danger", id:"b-group" %>
+<%elsif @group == 'B' %>
+    <%= link_to sanitize('<i class="fa fa-square-o"></i> ') + 'Aグループ', sales_path(:group_btn => 'A', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-primary", id:"a-group" %>
+    <%= link_to sanitize('<i class="fa fa-check-square-o"></i> ') + 'Bグループ', sales_path(:group_btn => '', sale_ym_from: @sale_ym_from, sale_ym_to: @sale_ym_to), class: "btn btn-danger", id:"b-group" %>
+<%end %>
 	
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
