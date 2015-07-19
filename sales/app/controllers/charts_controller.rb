@@ -499,7 +499,7 @@ class ChartsController < ApplicationController
         f.xAxis(:categories => categories)
         num = 0
         while num < xaxis.length do
-          f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
+          f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true}, :type => "column")
           num += 1
         end
         f.yAxis [{:title => {:text => "受注台数", :margin => 5} },]
@@ -533,7 +533,7 @@ class ChartsController < ApplicationController
         f.xAxis(:categories => categories)
         num = 0
         while num < xaxis.length do
-          f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true})
+          f.series(:name => xaxis[num],  :data => data[num].map(&:to_f), :dataLabels => {enabled:true}, :type => "column")
           num += 1
         end
         f.yAxis [{:title => {:text => "登録台数", :margin => 5} },]
