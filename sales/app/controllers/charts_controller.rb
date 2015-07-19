@@ -91,6 +91,18 @@ class ChartsController < ApplicationController
           fseries4.push(fseries4_all[no])
           fseries5.push(fseries5_all[no])
         end
+        #受注進度の平均
+        t=0.0
+        fseries3.each do |i|
+          t+=i.to_f
+        end
+        avg_newcar = t/fseries3.size
+        #登録進度の平均
+        t=0.0
+        fseries5.each do |i|
+          t+=i.to_f
+        end
+        avg_registration = t/fseries5.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "新車 受注・登録台数、計画進度")
           f.subtitle(text: params[:subtitle])
@@ -100,7 +112,10 @@ class ChartsController < ApplicationController
           f.series(:name => "登録", :yAxis => 0, :data => fseries4.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "受注進度", :yAxis => 1, :data => fseries3.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
           f.series(:name => "登録進度", :yAxis => 1, :data => fseries5.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true}]
+#          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true, 
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '受注進度', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_newcar, width: 1, id: 'plotline_newcar'}, 
+            {id: 'plotline_registration',color: 'blue', dashStyle: 'ShortDash',label: {text: '登録進度', align: 'right', style: {color: 'blue', fontWeight: 'bold'}}, value: avg_registration, width: 1}] }]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
@@ -119,6 +134,12 @@ class ChartsController < ApplicationController
           fseries2.push(fseries2_all[no])
           fseries3.push(fseries3_all[no])
         end
+        #受注進度の平均
+        t=0.0
+        fseries3.each do |i|
+          t+=i.to_f
+        end
+        avg_usedcar = t/fseries3.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "中古車 受注登録台数、受注進度")
           f.subtitle(text: params[:subtitle])
@@ -126,7 +147,8 @@ class ChartsController < ApplicationController
           f.series(:name => "計画", :yAxis => 0, :data => fseries1.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "受注", :yAxis => 0, :data => fseries2.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "受注進度", :yAxis => 1, :data => fseries3.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true,
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '受注進度', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_usedcar, width: 1, id: 'plotline_usedcar'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
@@ -196,6 +218,12 @@ class ChartsController < ApplicationController
           fseries3.push(fseries3_all[no])
           fseries4.push(fseries4_all[no])
         end
+        #実施率の平均
+        t=0.0
+        fseries4.each do |i|
+          t+=i.to_f
+        end
+        avg_year = t/fseries4.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "12ヶ月・24ヶ月点検 実施台数、実施率")
           f.subtitle(text: params[:subtitle])
@@ -204,7 +232,8 @@ class ChartsController < ApplicationController
           f.series(:name => "実施", :yAxis => 0, :data => fseries2.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "対象外実施", :yAxis => 0, :data => fseries3.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "実施率", :yAxis => 1, :data => fseries4.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true,
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '実施率', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_year, width: 1, id: 'plotline_year'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
@@ -226,6 +255,12 @@ class ChartsController < ApplicationController
           fseries3.push(fseries3_all[no])
           fseries4.push(fseries4_all[no])
         end
+        #実施率の平均
+        t=0.0
+        fseries4.each do |i|
+          t+=i.to_f
+        end
+        avg_inspection = t/fseries4.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "【車検】実施台数、実施率")
           f.subtitle(text: params[:subtitle])
@@ -234,7 +269,8 @@ class ChartsController < ApplicationController
           f.series(:name => "実施", :yAxis => 0, :data => fseries2.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "対象外実施", :yAxis => 0, :data => fseries3.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "実施率", :yAxis => 1, :data => fseries4.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true,
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '実施率', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_inspection, width: 1, id: 'plotline_inspection'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
@@ -256,6 +292,12 @@ class ChartsController < ApplicationController
           fseries3.push(fseries3_all[no])
           fseries4.push(fseries4_all[no])
         end
+        #継続率の平均
+        t=0.0
+        fseries4.each do |i|
+          t+=i.to_f
+        end
+        avg_insurance = t/fseries4.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "任意保険 件数、継続率")
           f.subtitle(text: params[:subtitle])
@@ -264,7 +306,8 @@ class ChartsController < ApplicationController
           f.series(:name => "継続対象", :yAxis => 0, :data => fseries2.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "継続", :yAxis => 0, :data => fseries3.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "継続率", :yAxis => 1, :data => fseries4.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '件数' }}, { title: { text: '継続率％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '件数' }}, { title: { text: '継続率％'}, opposite: true,
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '継続率', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_insurance, width: 1, id: 'plotline_insurance'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
@@ -361,6 +404,12 @@ class ChartsController < ApplicationController
           fseries2.push(fseries2_all[no])
           fseries3.push(fseries3_all[no])
         end
+        #利益率の平均
+        t=0.0
+        fseries3.each do |i|
+          t+=i.to_f
+        end
+        avg_profit = t/fseries3.size
         @chart = LazyHighCharts::HighChart.new("graph") do |f|
           f.title(:text => "総売上額・粗利額、総利益率")
           f.subtitle(text: params[:subtitle])
@@ -368,7 +417,8 @@ class ChartsController < ApplicationController
           f.series(:name => "売上額", :yAxis => 0, :data => fseries2.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "粗利額", :yAxis => 0, :data => fseries1.map(&:to_i), :dataLabels => {enabled:true}, :type => "column")
           f.series(:name => "利益率", :yAxis => 1, :data => fseries3.map(&:to_f), :dataLabels => {enabled:true}, :type => "line")
-          f.options[:yAxis] = [{ title: { text: '金額（千円）' }}, { title: { text: '利益率％'}, opposite: true}]
+          f.options[:yAxis] = [{ title: { text: '金額（千円）' }}, { title: { text: '利益率％'}, opposite: true,
+            plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '利益率', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_profit, width: 1, id: 'plotline_profit'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
           f.chart(:height => '560')
         end
