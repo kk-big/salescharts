@@ -1,0 +1,82 @@
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <%= notice %>
+</div>
+
+<p>
+  <strong>社員:</strong>
+  <%= @result.user.user_name %>
+</p>
+<p>
+  <strong>基準年月:</strong>
+  <%= yyyymm_slash(@result.result_ym) %>
+</p>
+<p>
+  <strong>商談件数:</strong>
+  <%= @result.negotiations %>
+</p>
+<p>
+  <strong>査定件数:</strong>
+  <%= @result.assessment %>
+</p>
+<p>
+  <strong>試乗件数:</strong>
+  <%= @result.testdrive %>
+</p>
+<p>
+  <strong>新車受注新規台数:</strong>
+  <%= @result.newcar_new %>
+</p>
+<p>
+  <strong>新車受注代替台数:</strong>
+  <%= @result.newcar_replace %>
+</p>
+<p>
+  <strong>新車受注増車台数:</strong>
+  <%= @result.newcar_add %>
+</p>
+<p>
+  <strong>新車受注紹介台数:</strong>
+  <%= @result.newcar_introduce %>
+</p>
+<p>
+  <strong>新車業販台数:</strong>
+  <%= @result.wholesale %>
+</p>
+<p>
+  <strong>新車受注現金台数:</strong>
+  <%= @result.newcar_cash %>
+</p>
+<p>
+  <strong>新車受注クレジット台数:</strong>
+  <%= @result.newcar_credit %>
+</p>
+<p>
+  <strong>新車受注残クレ台数:</strong>
+  <%= @result.newcar_credit_re %>
+</p>
+<p>
+  <strong>点検パック:</strong>
+  <%= @result.inspection_pack %>
+</p>
+<p>
+  <strong>新車登録当月可台数:</strong>
+  <%= @result.registration_possible %>
+</p>
+<p>
+  <strong>新車登録当月予定台数:</strong>
+  <%= @result.registration_plan_update %>
+</p>
+<p>
+  <strong>新車登録当月実績台数:</strong>
+  <%= @result.registration_result %>
+</p>
+<p>
+  <strong>中古車直版受注台数:</strong>
+  <%= @result.usedcar %>
+</p>
+
+<%= link_to '変更', edit_result_path(@result) %> |
+<%= link_to '戻る', results_path(:param_back => 'back') %> |
+<%= link_to '新規', new_result_path %>
+

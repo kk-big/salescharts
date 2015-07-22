@@ -1,0 +1,96 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h5>データ保存時、<%= @user.errors.count %>個のエラーが発生しました。</h5>
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+	  <table class="user_form_box">
+          <tr class="control-group">
+               <td class="form_label"><span class="label label-danger">必須</span><%= f.label :user_name,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.text_field :user_name, class: "input-small" %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><span class="label label-danger">必須</span><%= f.label :user_id,class: "control-label" %></td>
+               <td class="controls">
+                 <% if controller.action_name =='edit'%>
+                   <%= f.text_field :user_id, class: "input-small", disabled:true %>（半角英数字）
+                 <% elsif controller.action_name =='update'%>
+                   <%= f.text_field :user_id, class: "input-small", disabled:true %>（半角英数字）
+                 <% else %>
+                   <%= f.text_field :user_id, class: "input-small" %>（半角英数字）
+                 <% end %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><span class="label label-danger">必須</span><%= f.label :user_password,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.text_field :user_password, class: "input-small" %>（半角英数字）
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><%= f.label :emp_no,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.text_field :emp_no, class: "input-mini align-right"%>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><%= f.label :position,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :position, [ ["一般", "9"], ["主任", "4"], ["係長", "3"], ["課長", "2"], ["店長", "1"]], {} , class: "input-small" %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><%= f.label :job,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :job, [["営業", "1"], ["その他", "2"]] ,{}, { :class => 'input-small' } %>
+               </td>
+          </tr>
+		　　<tr class="control-group">
+               <td class="form_label"><%= f.label :group,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :group, [["", ""],["A", "A"], ["B", "B"]] ,{}, { :class => 'input-small' } %>
+               </td>
+          </tr>
+		　　<tr class="control-group">
+               <td class="form_label"><%= f.label :role,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :role, [["参照", "1"], ["更新", "2"]] ,{}, { :class => 'input-small' } %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><%= f.label :display_order,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.text_field :display_order, class: "input-mini align-right" %>
+               </td>
+          </tr>
+          <tr class="control-group">
+               <td class="form_label"><%= f.label :delete_flag,class: "control-label" %></td>
+               <td class="controls">
+                   <%= f.select :delete_flag, [["有効", "0"], ["無効", "1"]] ,{}, { :class => 'input-small' } %>
+               </td>
+          </tr>
+
+	  </table>
+	  <div class="actions" id="user_submit">
+        <table>
+          <tr>
+            <td>
+              <%= f.submit "登録", data: { confirm: '更新してもよろしいですか？' }  , class: "btn btn-primary"%>　
+            </td>
+            <td>
+              <%= link_to '戻る', users_path, class: "btn btn-default", id: "btn-return" %>
+            </td>
+          </tr>
+        </table>
+	  </div>
+  </fieldset>
+<% end %>

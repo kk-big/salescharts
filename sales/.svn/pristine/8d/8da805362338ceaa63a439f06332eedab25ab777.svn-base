@@ -1,0 +1,18 @@
+ja:
+  activerecord:
+    models:
+        user: 'ユーザー管理'
+    attributes:
+      user:
+        user_id: 'ユーザーID'
+        user_password: 'パスワード'
+        user_name: '社員名'
+        delete_flag: 'アカウント状態'
+        emp_no: '担当コード'
+        position: '役職'
+        job: '職種'
+        group: 'グループ'
+        role: '権限'
+        display_order: '表示順'
+        created_at: 'データ作成日'
+        updated_at: 'データ更新日'

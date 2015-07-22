@@ -1,0 +1,91 @@
+<p id="notice"><%= notice %></p>
+
+<%= javascript_tag do %>
+var data = {'data-date-format': 'YYYYMM' };
+$(function(){
+  $('.datepicker').attr(data);
+  $('.datepicker').datetimepicker();
+});
+
+$(function () {
+  $("#plan_ym_to").on("dp.change", function(){
+    var data = $("#plan_ym_to").val();
+    $("#plan_ym_from").val(data);
+  });
+});
+
+<% end %>
+
+<h4>計画一覧</h4>
+
+<table id="list_head">
+<tr><td>
+<!-- 検索フォーム -->
+<div id="search_form_box">
+<%= form_tag(plans_path, method: :get, id: :search_form) do %>
+  <div class="field calender">
+    <%= label_tag(:plan_ym, "基準年月", { :class => "search-label" } ) %>
+    <%= text_field_tag(:plan_ym_from, @plan_ym_from ,{ :class => "input-mini datepicker" } ) %>
+    ～
+    <%= text_field_tag(:plan_ym_to, @plan_ym_to ,{ :class => "input-mini datepicker" } ) %>
+    <%= label_tag(:user_id, "　社員", { :class => "search-label" } ) %>
+    <%= collection_select(:plan, :user_id, User.where(job: '1', delete_flag: '0').order('display_order asc','user_id asc'), :user_id, :user_name,  {include_blank: true, :selected => @user_id}  ,{ :class => "input-large" }) %>
+    <%= button_tag(type: 'submit', class: "btn btn-default") do %>
+    <span class="glyphicon glyphicon-search"></span> 
+    <% end %>
+    <button class="btn btn-default" type="button" onclick="clearSearchForm()"><i class="glyphicon glyphicon-remove"></i></button>　
+  </div>
+<% end %>
+</div>
+</td>
+<td id="btn-new">
+<%= link_to sanitize('<i class="glyphicon glyphicon-pencil"></i> ') + '新規登録', new_plan_path, class: "btn btn-danger" %>
+</td>
+</tr>
+</table>
+
+<table class="table table-condensed table-bordered table-hover table-striped plan-table">
+  <thead>
+    <tr>
+      <th rowspan="2">社員</th>
+      <th rowspan="2">基準年月</th>
+      <th rowspan="2">管理内台数</th>
+      <th colspan="4">新車</th>
+      <th rowspan="2">中古車直販</th>
+      <th rowspan="2">初回1ヶ月点検</th>
+      <th rowspan="2">初回6ヶ月点検</th>
+      <th rowspan="2">12点検・24点検</th>
+      <th rowspan="2">車検</th>
+      <th rowspan="2">任意保険継続</th>
+      <th  rowspan="2" colspan="2"></th>
+    </tr>
+    <tr>
+      <th>計画</th>
+      <th>前月注残</th>
+      <th>登録当月可</th>
+      <th>登録当月予定</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @plans.each do |plan| %>
+      <tr>
+        <td id="align-left"><%= plan.user.user_name %></td>
+        <td id="align-center"><%= yyyymm_slash(plan.plan_ym) %></td>
+        <td><%= plan.customer %></td>
+        <td><%= plan.newcar %></td>
+        <td><%= plan.newcar_balance %></td>
+        <td><%= plan.registration_possible %></td>
+        <td><%= plan.registration_plan %></td>
+        <td><%= plan.usedcar %></td>
+        <td><%= plan.onemonth %></td>
+        <td><%= plan.sixmonth %></td>
+        <td><%= plan.years %></td>
+        <td><%= plan.inspection %></td>
+        <td><%= plan.insurance %></td>
+        <td id="align-center"><%= link_to '変更', edit_plan_path(plan) %></td>
+        <td id="align-center"><%= link_to '削除', plan, method: :delete, data: { confirm: '計画を削除しますか？' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
