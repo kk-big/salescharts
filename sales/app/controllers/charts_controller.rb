@@ -68,7 +68,7 @@ class ChartsController < ApplicationController
             {:title => {:text => "件数", :margin => 5} },
           ]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:defaultSeriesType=>"column", :height => 560)
+          f.chart(:defaultSeriesType=>"column", :height => 560, :width => 1170)
         end
       # 新車車 受注・登録台数／計画進度
       when 'chart_newcar' then
@@ -117,7 +117,7 @@ class ChartsController < ApplicationController
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '受注進度', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_newcar, width: 1, id: 'plotline_newcar'}, 
             {id: 'plotline_registration',color: 'blue', dashStyle: 'ShortDash',label: {text: '登録進度', align: 'right', style: {color: 'blue', fontWeight: 'bold'}}, value: avg_registration, width: 1}] }]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 中古車 受注・登録台数／計画進度
       when 'chart_usedcar' then
@@ -150,7 +150,7 @@ class ChartsController < ApplicationController
           f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '進度％'}, opposite: true,
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_usedcar, width: 1, id: 'plotline_usedcar'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【初回1ヶ月点検】実施台数
       when 'chart_onemonth' then
@@ -174,7 +174,7 @@ class ChartsController < ApplicationController
             {:title => {:text => "台数", :margin => 5} },
           ]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:defaultSeriesType=>"column", :height => 560)
+          f.chart(:defaultSeriesType=>"column", :height => 560, :width => 1170)
         end
       # 【初回6ヶ月点検】実施台数
       when 'chart_sixmonth' then
@@ -198,7 +198,7 @@ class ChartsController < ApplicationController
             {:title => {:text => "台数", :margin => 5} },
           ]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:defaultSeriesType=>"column", :height => 560)
+          f.chart(:defaultSeriesType=>"column", :height => 560, :width => 1170)
         end
       # 【12ヶ月・24ヶ月点検】実施台数／実施率
       when 'chart_years' then
@@ -235,7 +235,7 @@ class ChartsController < ApplicationController
           f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true,
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_year, width: 1, id: 'plotline_year'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【車検】実施台数／実施率
       when 'chart_inspection' then
@@ -272,7 +272,7 @@ class ChartsController < ApplicationController
           f.options[:yAxis] = [{ title: { text: '台数' }}, { title: { text: '実施率％'}, opposite: true,
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_inspection, width: 1, id: 'plotline_inspection'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【任意保険】件数／継続率
       when 'chart_insurance' then
@@ -309,7 +309,7 @@ class ChartsController < ApplicationController
           f.options[:yAxis] = [{ title: { text: '件数' }}, { title: { text: '継続率％'}, opposite: true,
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_insurance, width: 1, id: 'plotline_insurance'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【新車】台数、売上額・粗利
       when 'chart_profit_of_newcar' then
@@ -335,7 +335,7 @@ class ChartsController < ApplicationController
           f.series(:name => "台数", :yAxis => 0, :data => fseries1.map(&:to_i), :dataLabels => {enabled:true}, :type => "line", :yAxis => 1)
           f.options[:yAxis] = [{ title: { text: '金額' }}, { title: { text: '台数'}, opposite: true}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【中古車】台数／粗利
       when 'chart_profit_of_usedcar' then
@@ -361,7 +361,7 @@ class ChartsController < ApplicationController
           f.series(:name => "台数", :yAxis => 0, :data => fseries1.map(&:to_i), :dataLabels => {enabled:true}, :type => "line", :yAxis => 1)
           f.options[:yAxis] = [{ title: { text: '金額' }}, { title: { text: '台数'}, opposite: true}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【サービス】台数／粗利
       when 'chart_profit_of_service' then
@@ -387,7 +387,7 @@ class ChartsController < ApplicationController
           f.series(:name => "台数", :yAxis => 0, :data => fseries1.map(&:to_i), :dataLabels => {enabled:true}, :type => "line", :yAxis => 1)
           f.options[:yAxis] = [{ title: { text: '金額' }}, { title: { text: '台数'}, opposite: true}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       # 【総粗利】金額
       when 'chart_profit_of_all' then
@@ -420,7 +420,7 @@ class ChartsController < ApplicationController
           f.options[:yAxis] = [{ title: { text: '金額（千円）' }}, { title: { text: '利益率％'}, opposite: true,
             plotLines: [{color: 'red', dashStyle: 'ShortDash', label: {text: '', align: 'right', style: {color: 'red', fontWeight: 'bold'}}, value: avg_profit, width: 1, id: 'plotline_profit'}]}]
           f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-          f.chart(:height => '560')
+          f.chart(:height => '560', :width => 1170)
         end
       else
         logger.debug("else")
@@ -470,7 +470,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【新車】受注台数推移
@@ -504,7 +504,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "受注台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【新車】登録台数
@@ -538,7 +538,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "登録台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【中古車】受注台数
@@ -572,7 +572,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "受注台数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【12点検・24点検】実施率推移
@@ -606,7 +606,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "実施率％", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【車検】実施率推移
@@ -640,7 +640,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "実施率％", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       # 【任意保険】新規件数
@@ -674,7 +674,7 @@ class ChartsController < ApplicationController
         end
         f.yAxis [{:title => {:text => "新規件数", :margin => 5} },]
         f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
-        f.chart(:height => '560')
+        f.chart(:height => '560', :width => 1170)
         end
 
       else
